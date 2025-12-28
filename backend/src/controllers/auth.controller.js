@@ -141,7 +141,9 @@ async function getProfile(req, res) {
       return res.status(404).json({ error: 'Usuario no encontrado' });
     }
 
-    res.json(users[0]);
+    res.json({
+      user: users[0]
+    });
 
   } catch (error) {
     console.error('Error obteniendo perfil:', error);
