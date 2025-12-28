@@ -168,78 +168,104 @@ exports.getRiskAnalysis = async (req, res) => {
     const totalPortfolio = totals[0].total_portfolio_cents || 0;
     const totalInvestments = totals[0].total_investments || 0;
 
-    // 3. Formatear distribución con porcentajes
-    const distribution = riskDistribution.map(item => ({
-      riskLevel: item.risk_level,
-      count: item.count,
-      amount: fromCents(item.total_cents),
-      percentage: totalPortfolio > 0 
-        ? parseFloat(((item.total_cents / totalPortfolio) * 100).toFixed(2))
-        : 0
-    }));
-
-    // 4. Asegurar que existan todos los niveles de riesgo
-    const riskLevels = ['bajo', 'medio', 'alto'];
-    const completeDistribution = riskLevels.map(level => {
-      const existing = distribution.find(d => d.riskLevel === level);
-      return existing || {
-        riskLevel: level,
-        count: 0,
-        amount: 0,
-        percentage: 0
-      };
-    });
-
-    // 5. Calcular score de riesgo ponderado (0-10)
-    const riskWeights = { bajo: 3, medio: 6, alto: 10 };
-    let weightedScore = 0;
-    
-    completeDistribution.forEach(item => {
-      weightedScore += (item.percentage / 100) * riskWeights[item.riskLevel];
-    });
-
-    // 6. Determinar clasificación general del portafolio
-    let portfolioRiskLabel = 'conservador';
-    if (weightedScore > 7) portfolioRiskLabel = 'agresivo';
-    else if (weightedScore > 5) portfolioRiskLabel = 'moderado';
-
-    // 7. Generar alertas
-    const alerts = [];
-    
-    // Alerta si más del 60% está en alto riesgo
-    const highRiskItem = completeDistribution.find(d => d.riskLevel === 'alto');
-    if (highRiskItem && highRiskItem.percentage > 60) {
-      alerts.push({
-        type: 'warning',
-        message: `${highRiskItem.percentage}% de tu portafolio está en inversiones de ALTO riesgo. Considera diversificar.`
+    // Si no hay inversiones, retornar estructura vacía
+    if (totalInvestments === 0) {
+      return res.json({
+        total_investments: 0,
+        total_value: 0,
+        risk_score: 0,
+        risk_level: 'medio',
+        diversification_score: 0,
+        risk_distribution: {
+          bajo: { percentage: 0, count: 0, value: 0 },
+          medio: { percentage: 0, count: 0, value: 0 },
+          alto: { percentage: 0, count: 0, value: 0 }
+        },
+        recommendations: []
       });
     }
 
-    // Alerta si todo está en un solo nivel
-    const nonZeroLevels = completeDistribution.filter(d => d.percentage > 0).length;
+    // 3. Construir distribución por nivel de riesgo
+    const riskLevels = ['bajo', 'medio', 'alto'];
+    const risk_distribution = {};
+    
+    riskLevels.forEach(level => {
+      const found = riskDistribution.find(d => d.risk_level === level);
+      risk_distribution[level] = {
+        percentage: found ? parseFloat(((found.total_cents / totalPortfolio) * 100).toFixed(2)) : 0,
+        count: found ? found.count : 0,
+        value: found ? fromCents(found.total_cents) : 0
+      };
+    });
+
+    // 4. Calcular score de riesgo ponderado (0-10)
+    const riskWeights = { bajo: 2, medio: 5, alto: 8 };
+    let riskScore = 0;
+    
+    Object.keys(risk_distribution).forEach(level => {
+      riskScore += (risk_distribution[level].percentage / 100) * riskWeights[level];
+    });
+    riskScore = parseFloat(riskScore.toFixed(2));
+
+    // 5. Determinar nivel de riesgo general
+    let risk_level = 'medio';
+    if (riskScore < 3) risk_level = 'bajo';
+    else if (riskScore > 6) risk_level = 'alto';
+
+    // 6. Calcular diversificación
+    const diversificationScore = Math.min(
+      100,
+      (Math.log(totalInvestments + 1) / Math.log(10)) * 50
+    );
+
+    // 7. Generar recomendaciones
+    const recommendations = [];
+
+    // Si más del 70% está en alto riesgo
+    if (risk_distribution.alto.percentage > 70) {
+      recommendations.push({
+        type: 'warning',
+        title: '⚠️ Alto Riesgo Concentrado',
+        message: `${risk_distribution.alto.percentage}% de tu portafolio está en inversiones de ALTO riesgo. Considera diversificar hacia inversiones más conservadoras.`
+      });
+    }
+
+    // Si todo está en un solo nivel
+    const nonZeroLevels = Object.values(risk_distribution).filter(d => d.percentage > 0).length;
     if (nonZeroLevels === 1 && totalInvestments > 1) {
-      alerts.push({
+      recommendations.push({
         type: 'info',
+        title: '💡 Diversifica tu portafolio',
         message: 'Tu portafolio no está diversificado por riesgo. Considera incluir inversiones de diferentes niveles.'
       });
     }
 
-    // Alerta si no hay inversiones de bajo riesgo
-    const lowRiskItem = completeDistribution.find(d => d.riskLevel === 'bajo');
-    if (totalInvestments >= 3 && (!lowRiskItem || lowRiskItem.percentage === 0)) {
-      alerts.push({
-        type: 'suggestion',
+    // Si no hay inversiones de bajo riesgo
+    if (totalInvestments >= 3 && risk_distribution.bajo.percentage === 0) {
+      recommendations.push({
+        type: 'info',
+        title: '🔒 Agrega estabilidad',
         message: 'No tienes inversiones de bajo riesgo. Considera agregar CDTs o bonos para estabilidad.'
       });
     }
 
+    // Si hay buena diversificación
+    if (nonZeroLevels === 3) {
+      recommendations.push({
+        type: 'success',
+        title: '✅ Buen equilibrio',
+        message: `Tu portafolio está bien diversificado con presencia en los tres niveles de riesgo.`
+      });
+    }
+
     res.json({
-      distribution: completeDistribution,
-      totalPortfolio: fromCents(totalPortfolio),
-      totalInvestments,
-      riskScore: parseFloat(weightedScore.toFixed(2)),
-      portfolioRiskLabel,
-      alerts
+      total_investments: totalInvestments,
+      total_value: fromCents(totalPortfolio),
+      risk_score: riskScore,
+      risk_level,
+      diversification_score: parseFloat(diversificationScore.toFixed(2)),
+      risk_distribution,
+      recommendations
     });
 
   } catch (error) {

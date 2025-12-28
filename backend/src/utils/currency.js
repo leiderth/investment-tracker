@@ -2,7 +2,7 @@
  * Convierte pesos a centavos
  * Ejemplo: 500000 → 50000000
  */
-function tocents(amount) {
+function toCents(amount) {
   return Math.round(amount * 100);
 }
 
@@ -26,4 +26,4 @@ function formatCOP(amount) {
   }).format(amount);
 }
 
-module.exports = { tocents, fromCents, formatCOP };
+module.exports = { toCents, fromCents, formatCOP };

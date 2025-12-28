@@ -16,12 +16,16 @@ const authRoutes = require('./routes/auth.routes');
 const investmentsRoutes = require('./routes/investments.routes');
 const dashboardRoutes = require('./routes/dashboard.routes');
 const transactionsRoutes = require('./routes/transactions.routes');
+const riskRoutes = require('./routes/risk.routes');
+const simulationsRoutes = require('./routes/simulations.routes');
 
 // Registrar rutas
 app.use('/api/auth', authRoutes);
 app.use('/api/investments', investmentsRoutes);
 app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/risk', riskRoutes);
 app.use('/api', transactionsRoutes);
+app.use('/api/simulations', simulationsRoutes); 
 
 // Ruta de prueba (health check)
 app.get('/api/health', (req, res) => {

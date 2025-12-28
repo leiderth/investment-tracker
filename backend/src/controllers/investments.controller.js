@@ -1,5 +1,7 @@
+// backend/src/controllers/investments.controller.js
+
 const pool = require('../config/database');
-const { tocents, fromCents } = require('../utils/currency');
+const { toCents, fromCents } = require('../utils/currency');
 
 /**
  * @route   GET /api/investments
@@ -46,7 +48,7 @@ exports.getInvestments = async (req, res) => {
 
     console.log('📊 [getInvestments] Resultado de BD:', investments.length, 'inversiones encontradas');
 
-    // Formatear respuesta
+    // Formatear respuesta CON CAMPOS DE RIESGO
     const formattedInvestments = investments.map(inv => ({
       id: inv.id,
       user_id: inv.user_id,
@@ -61,7 +63,13 @@ exports.getInvestments = async (req, res) => {
       end_date: inv.end_date,
       status: inv.status,
       notes: inv.notes,
-      created_at: inv.created_at
+      // ← CAMPOS DE RIESGO
+      risk_level: inv.risk_level || 'medio',
+      volatility_percentage: inv.volatility_percentage,
+      max_drawdown_percentage: inv.max_drawdown_percentage,
+      risk_notes: inv.risk_notes,
+      created_at: inv.created_at,
+      updated_at: inv.updated_at
     }));
 
     console.log('✅ [getInvestments] Enviando respuesta con', formattedInvestments.length, 'inversiones');
@@ -71,7 +79,7 @@ exports.getInvestments = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Error al obtener inversiones:', error);
+    console.error('❌ [getInvestments] Error al obtener inversiones:', error);
     res.status(500).json({ 
       error: 'Error al obtener las inversiones',
       details: error.message 
@@ -81,85 +89,147 @@ exports.getInvestments = async (req, res) => {
 
 /**
  * @route   POST /api/investments
- * @desc    Crear nueva inversión
+ * @desc    Crear nueva inversión CON GESTIÓN DE RIESGO
  * @access  Private
  */
 exports.createInvestment = async (req, res) => {
+  const connection = await pool.getConnection();
+  
   try {
     const {
       type,
       platform,
-      initialAmount,
-      expectedReturn,
-      startDate,
-      endDate,
+      initial_amount,
+      initialAmount, // Compatibilidad con ambos nombres
+      current_amount,
+      expected_return_percentage,
+      expectedReturn, // Compatibilidad
+      start_date,
+      startDate, // Compatibilidad
+      end_date,
+      endDate, // Compatibilidad
       notes,
-      riskLevel
+      // ← NUEVOS CAMPOS DE RIESGO
+      risk_level,
+      riskLevel, // Compatibilidad
+      volatility_percentage,
+      max_drawdown_percentage,
+      risk_notes
     } = req.body;
 
     const userId = req.user.id;
 
-    // Validaciones
-    if (!type || !platform || !initialAmount || !startDate) {
+    // Compatibilidad con nombres en camelCase
+    const finalInitialAmount = initial_amount || initialAmount;
+    const finalStartDate = start_date || startDate;
+    const finalEndDate = end_date || endDate;
+    const finalExpectedReturn = expected_return_percentage || expectedReturn;
+    const finalRiskLevel = risk_level || riskLevel;
+
+    // Validaciones básicas
+    if (!type || !platform || !finalInitialAmount || !finalStartDate) {
       return res.status(400).json({
-        error: 'Faltan campos requeridos: type, platform, initialAmount, startDate'
+        error: 'Faltan campos requeridos: type, platform, initial_amount, start_date'
       });
     }
 
-    if (initialAmount <= 0) {
+    if (finalInitialAmount <= 0) {
       return res.status(400).json({
         error: 'El monto inicial debe ser mayor a cero'
       });
     }
 
-    // Validar risk_level
-    const validRiskLevels = ['bajo', 'medio', 'alto'];
-    const finalRiskLevel = riskLevel && validRiskLevels.includes(riskLevel) 
-      ? riskLevel 
-      : 'medio';
+    // Asignar nivel de riesgo por defecto según tipo
+    let assignedRiskLevel = 'medio';
+    if (finalRiskLevel && ['bajo', 'medio', 'alto'].includes(finalRiskLevel)) {
+      assignedRiskLevel = finalRiskLevel;
+    } else {
+      // Asignación automática según tipo de inversión
+      const riskDefaults = {
+        'CDT': 'bajo',
+        'acciones': 'alto',
+        'ETF': 'medio',
+        'cripto': 'alto',
+        'negocio': 'alto',
+        'otro': 'medio'
+      };
+      assignedRiskLevel = riskDefaults[type] || 'medio';
+    }
 
-    const initialAmountCents = tocents(initialAmount);
+    await connection.beginTransaction();
 
-    const [result] = await pool.execute(
+    // Convertir montos a centavos
+    const initialAmountCents = toCents(finalInitialAmount);
+    const currentAmountCents = current_amount ? toCents(current_amount) : initialAmountCents;
+
+    // Insertar inversión CON CAMPOS DE RIESGO
+    const [result] = await connection.execute(
       `INSERT INTO investments (
-        user_id, type, platform, initial_amount_cents, current_amount_cents,
-        expected_return_percentage, start_date, end_date, notes, risk_level
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        user_id, type, platform, 
+        initial_amount_cents, current_amount_cents,
+        expected_return_percentage, 
+        start_date, end_date, 
+        notes, status,
+        risk_level, volatility_percentage, 
+        max_drawdown_percentage, risk_notes
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'active', ?, ?, ?, ?)`,
       [
         userId,
         type,
         platform,
         initialAmountCents,
-        initialAmountCents,
-        expectedReturn || null,
-        startDate,
-        endDate || null,
+        currentAmountCents,
+        finalExpectedReturn || null,
+        finalStartDate,
+        finalEndDate || null,
         notes || null,
-        finalRiskLevel
+        assignedRiskLevel,
+        volatility_percentage || null,
+        max_drawdown_percentage || null,
+        risk_notes || null
       ]
     );
 
+    const investmentId = result.insertId;
+
     // Crear snapshot inicial
-    await pool.execute(
+    await connection.execute(
       `INSERT INTO investment_snapshots (investment_id, value_cents, snapshot_date)
        VALUES (?, ?, ?)`,
-      [result.insertId, initialAmountCents, startDate]
+      [investmentId, currentAmountCents, finalStartDate]
     );
+
+    await connection.commit();
+
+    console.log('✅ [createInvestment] Inversión creada con ID:', investmentId, '| Risk Level:', assignedRiskLevel);
 
     res.status(201).json({
       message: 'Inversión creada exitosamente',
-      investmentId: result.insertId
+      investment: {
+        id: investmentId,
+        type,
+        platform,
+        initial_amount: finalInitialAmount,
+        current_amount: current_amount || finalInitialAmount,
+        risk_level: assignedRiskLevel
+      }
     });
 
   } catch (error) {
-    console.error('Error al crear inversión:', error);
-    res.status(500).json({ error: 'Error al crear la inversión' });
+    await connection.rollback();
+    console.error('❌ [createInvestment] Error al crear inversión:', error);
+    res.status(500).json({ 
+      error: 'Error al crear la inversión',
+      details: error.message 
+    });
+  } finally {
+    connection.release();
   }
 };
 
 /**
  * @route   GET /api/investments/:id
- * @desc    Obtener una inversión específica
+ * @desc    Obtener una inversión específica CON DATOS DE RIESGO
  * @access  Private
  */
 exports.getInvestmentById = async (req, res) => {
@@ -168,7 +238,12 @@ exports.getInvestmentById = async (req, res) => {
     const userId = req.user.id;
 
     const [investments] = await pool.query(
-      `SELECT * FROM investments WHERE id = ? AND user_id = ?`,
+      `SELECT 
+        i.*,
+        ROUND(((i.current_amount_cents - i.initial_amount_cents) / i.initial_amount_cents) * 100, 2) as actual_return_percentage,
+        (i.current_amount_cents - i.initial_amount_cents) as profit_loss_cents
+       FROM investments i 
+       WHERE i.id = ? AND i.user_id = ?`,
       [id, userId]
     );
 
@@ -188,21 +263,26 @@ exports.getInvestmentById = async (req, res) => {
       ...investment,
       initial_amount: fromCents(investment.initial_amount_cents),
       current_amount: fromCents(investment.current_amount_cents),
+      profit_loss: fromCents(investment.profit_loss_cents),
       transactions: transactions.map(t => ({
         ...t,
-        amount: fromCents(t.amount_cents)
+        amount: fromCents(t.amount_cents),
+        balance_after: fromCents(t.balance_after_cents)
       }))
     });
 
   } catch (error) {
-    console.error('Error obteniendo inversión:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
+    console.error('❌ [getInvestmentById] Error obteniendo inversión:', error);
+    res.status(500).json({ 
+      error: 'Error interno del servidor',
+      details: error.message 
+    });
   }
 };
 
 /**
  * @route   PUT /api/investments/:id
- * @desc    Actualizar inversión (valor actual o risk_level)
+ * @desc    Actualizar inversión (valor actual Y/O datos de riesgo)
  * @access  Private
  */
 exports.updateInvestment = async (req, res) => {
@@ -210,8 +290,22 @@ exports.updateInvestment = async (req, res) => {
 
   try {
     const { id } = req.params;
-    const { currentAmount, riskLevel, notes, status } = req.body;
+    const { 
+      current_amount,
+      currentAmount, // Compatibilidad
+      risk_level,
+      riskLevel, // Compatibilidad
+      volatility_percentage,
+      max_drawdown_percentage,
+      risk_notes,
+      notes, 
+      status 
+    } = req.body;
     const userId = req.user.id;
+
+    // Compatibilidad
+    const finalCurrentAmount = current_amount !== undefined ? current_amount : currentAmount;
+    const finalRiskLevel = risk_level || riskLevel;
 
     await connection.beginTransaction();
 
@@ -233,37 +327,22 @@ exports.updateInvestment = async (req, res) => {
       });
     }
 
-    // Actualizar risk_level si se proporciona
-    if (riskLevel) {
-      const validRiskLevels = ['bajo', 'medio', 'alto'];
-      if (!validRiskLevels.includes(riskLevel)) {
-        await connection.rollback();
-        return res.status(400).json({
-          error: 'Nivel de riesgo inválido. Usa: bajo, medio, alto'
-        });
-      }
+    // Construir query dinámica
+    const updates = [];
+    const values = [];
 
-      await connection.execute(
-        'UPDATE investments SET risk_level = ?, updated_at = NOW() WHERE id = ?',
-        [riskLevel, id]
-      );
-    }
-
-    // Actualizar valor actual si se proporciona
-    if (currentAmount !== undefined) {
-      if (currentAmount < 0) {
+    // Actualizar valor actual
+    if (finalCurrentAmount !== undefined) {
+      if (finalCurrentAmount < 0) {
         await connection.rollback();
         return res.status(400).json({
           error: 'El valor actual no puede ser negativo'
         });
       }
 
-      const currentAmountCents = tocents(currentAmount);
-
-      await connection.execute(
-        'UPDATE investments SET current_amount_cents = ?, updated_at = NOW() WHERE id = ?',
-        [currentAmountCents, id]
-      );
+      const currentAmountCents = toCents(finalCurrentAmount);
+      updates.push('current_amount_cents = ?');
+      values.push(currentAmountCents);
 
       // Crear snapshot
       await connection.execute(
@@ -274,30 +353,77 @@ exports.updateInvestment = async (req, res) => {
       );
     }
 
-    // Actualizar notas si se proporcionan
-    if (notes !== undefined) {
-      await connection.execute(
-        'UPDATE investments SET notes = ?, updated_at = NOW() WHERE id = ?',
-        [notes, id]
-      );
+    // Actualizar risk_level
+    if (finalRiskLevel !== undefined) {
+      const validRiskLevels = ['bajo', 'medio', 'alto'];
+      if (!validRiskLevels.includes(finalRiskLevel)) {
+        await connection.rollback();
+        return res.status(400).json({
+          error: 'Nivel de riesgo inválido. Usa: bajo, medio, alto'
+        });
+      }
+      updates.push('risk_level = ?');
+      values.push(finalRiskLevel);
     }
 
-    // Actualizar status si se proporciona
-    if (status !== undefined) {
-      await connection.execute(
-        'UPDATE investments SET status = ?, updated_at = NOW() WHERE id = ?',
-        [status, id]
-      );
+    // Actualizar volatility_percentage
+    if (volatility_percentage !== undefined) {
+      updates.push('volatility_percentage = ?');
+      values.push(volatility_percentage);
     }
+
+    // Actualizar max_drawdown_percentage
+    if (max_drawdown_percentage !== undefined) {
+      updates.push('max_drawdown_percentage = ?');
+      values.push(max_drawdown_percentage);
+    }
+
+    // Actualizar risk_notes
+    if (risk_notes !== undefined) {
+      updates.push('risk_notes = ?');
+      values.push(risk_notes);
+    }
+
+    // Actualizar notas generales
+    if (notes !== undefined) {
+      updates.push('notes = ?');
+      values.push(notes);
+    }
+
+    // Actualizar status
+    if (status !== undefined) {
+      updates.push('status = ?');
+      values.push(status);
+    }
+
+    if (updates.length === 0) {
+      await connection.rollback();
+      return res.status(400).json({ error: 'No hay campos para actualizar' });
+    }
+
+    // Agregar updated_at
+    updates.push('updated_at = NOW()');
+    values.push(id, userId);
+
+    // Ejecutar actualización
+    await connection.execute(
+      `UPDATE investments SET ${updates.join(', ')} WHERE id = ? AND user_id = ?`,
+      values
+    );
 
     await connection.commit();
+
+    console.log('✅ [updateInvestment] Inversión actualizada:', id);
 
     res.json({ message: 'Inversión actualizada exitosamente' });
 
   } catch (error) {
     await connection.rollback();
-    console.error('Error al actualizar inversión:', error);
-    res.status(500).json({ error: 'Error al actualizar la inversión' });
+    console.error('❌ [updateInvestment] Error al actualizar inversión:', error);
+    res.status(500).json({ 
+      error: 'Error al actualizar la inversión',
+      details: error.message 
+    });
   } finally {
     connection.release();
   }
@@ -305,7 +431,7 @@ exports.updateInvestment = async (req, res) => {
 
 /**
  * @route   DELETE /api/investments/:id
- * @desc    Eliminar una inversión
+ * @desc    Cerrar inversión (soft delete)
  * @access  Private
  */
 exports.deleteInvestment = async (req, res) => {
@@ -315,7 +441,7 @@ exports.deleteInvestment = async (req, res) => {
 
     // Verificar que existe y pertenece al usuario
     const [investments] = await pool.query(
-      'SELECT id FROM investments WHERE id = ? AND user_id = ?',
+      'SELECT id, status FROM investments WHERE id = ? AND user_id = ?',
       [id, userId]
     );
 
@@ -323,28 +449,27 @@ exports.deleteInvestment = async (req, res) => {
       return res.status(404).json({ error: 'Inversión no encontrada' });
     }
 
-    // Eliminar snapshots asociados
-    await pool.query(
-      'DELETE FROM investment_snapshots WHERE investment_id = ?',
-      [id]
-    );
+    if (investments[0].status === 'closed') {
+      return res.status(400).json({ error: 'La inversión ya está cerrada' });
+    }
 
-    // Eliminar transacciones asociadas
+    // Soft delete: cambiar status a 'closed'
     await pool.query(
-      'DELETE FROM transactions WHERE investment_id = ?',
-      [id]
-    );
-
-    // Eliminar inversión
-    await pool.query(
-      'DELETE FROM investments WHERE id = ? AND user_id = ?',
+      `UPDATE investments 
+       SET status = 'closed', updated_at = NOW() 
+       WHERE id = ? AND user_id = ?`,
       [id, userId]
     );
 
-    res.json({ message: 'Inversión eliminada exitosamente' });
+    console.log('✅ [deleteInvestment] Inversión cerrada:', id);
+
+    res.json({ message: 'Inversión cerrada exitosamente' });
 
   } catch (error) {
-    console.error('Error eliminando inversión:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
+    console.error('❌ [deleteInvestment] Error al cerrar inversión:', error);
+    res.status(500).json({ 
+      error: 'Error al cerrar la inversión',
+      details: error.message 
+    });
   }
 };

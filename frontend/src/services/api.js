@@ -71,7 +71,7 @@ export const getDashboardStats = () => api.get('/dashboard/stats');
 export const getPatrimonyEvolution = () => api.get('/dashboard/evolution');
 
 // ==========================================
-// TRANSACTIONS ENDPOINTS (NUEVO)
+// TRANSACTIONS ENDPOINTS
 // ==========================================
 export const transactionsAPI = {
   create: (investmentId, data) => api.post(`/investments/${investmentId}/transactions`, data),
@@ -88,6 +88,33 @@ export const getTransactions = (investmentId) =>
 
 export const deleteTransaction = (transactionId) => 
   api.delete(`/transactions/${transactionId}`);
+export const riskAPI = {
+  getPortfolioAnalysis: () => api.get('/risk/portfolio-analysis'),
+  getDistribution: () => api.get('/risk/distribution')
+};
+
+export const getPortfolioRiskAnalysis = () => api.get('/risk/portfolio-analysis');
+export const getRiskDistribution = () => api.get('/risk/distribution');
+
+// ==========================================
+// SIMULATIONS ENDPOINTS
+// ==========================================
+export const simulationsAPI = {
+  calculate: (data) => api.post('/simulations/calculate', data),
+  compare: (data) => api.post('/simulations/compare', data),
+  requiredContribution: (data) => api.post('/simulations/required-contribution', data),
+  save: (data) => api.post('/simulations', data),
+  getAll: () => api.get('/simulations'),
+  delete: (id) => api.delete(`/simulations/${id}`)
+};
+
+// Exportaciones individuales
+export const calculateSimulation = (data) => api.post('/simulations/calculate', data);
+export const compareScenarios = (data) => api.post('/simulations/compare', data);
+export const calculateRequiredContribution = (data) => api.post('/simulations/required-contribution', data);
+export const saveSimulation = (data) => api.post('/simulations', data);
+export const getSimulations = () => api.get('/simulations');
+export const deleteSimulation = (id) => api.delete(`/simulations/${id}`);
 
 // ==========================================
 // EXPORT DEFAULT

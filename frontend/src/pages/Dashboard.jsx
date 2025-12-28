@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { dashboardAPI } from '../services/api';
 import StatCard from '../components/common/StatCard';
 import PatrimonyChart from '../components/common/PatrimonyChart';
+import RiskAnalysisCard from '../components/risk/RiskAnalysisCard';
 import {
   TrendingUp,
   Wallet,
@@ -118,6 +119,11 @@ export default function Dashboard() {
           color="yellow"
           subtitle={`${summary?.totalInvestments || 0} en total`}
         />
+      </div>
+
+      {/* AGREGAR ANÁLISIS DE RIESGO */}
+      <div className="mb-8">
+        <RiskAnalysisCard />
       </div>
 
       {/* Gráfico de evolución */}

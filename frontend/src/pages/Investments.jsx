@@ -7,6 +7,7 @@ import { formatCurrency, formatDate } from '../utils/format';
 import UpdateValueModal from '../components/investments/UpdateValueModal';
 import TransactionsModal from '../components/investments/TransactionsModal';
 import { exportToExcel } from '../utils/export';
+import RiskBadge from '../components/common/RiskBadge';
 
 export default function Investments() {
   const [investments, setInvestments] = useState([]);
@@ -25,7 +26,8 @@ export default function Investments() {
     expected_return: '',
     start_date: new Date().toISOString().split('T')[0],
     end_date: '',
-    notes: ''
+    notes: '',
+      risk_level: 'medio'
   });
 
   useEffect(() => {
@@ -56,7 +58,7 @@ export default function Investments() {
         endDate: formData.end_date || null,
         notes: formData.notes || null
       });
-      
+
       setShowCreateForm(false);
       setFormData({
         type: 'CDT',
@@ -149,31 +151,28 @@ export default function Investments() {
         <div className="flex gap-2">
           <button
             onClick={() => setFilter('all')}
-            className={`px-4 py-2 rounded-lg transition ${
-              filter === 'all'
+            className={`px-4 py-2 rounded-lg transition ${filter === 'all'
                 ? 'bg-indigo-600 text-white'
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-            }`}
+              }`}
           >
             Todas ({investments.length})
           </button>
           <button
             onClick={() => setFilter('active')}
-            className={`px-4 py-2 rounded-lg transition ${
-              filter === 'active'
+            className={`px-4 py-2 rounded-lg transition ${filter === 'active'
                 ? 'bg-green-600 text-white'
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-            }`}
+              }`}
           >
             Activas ({investments.filter(i => i.status === 'active').length})
           </button>
           <button
             onClick={() => setFilter('closed')}
-            className={`px-4 py-2 rounded-lg transition ${
-              filter === 'closed'
+            className={`px-4 py-2 rounded-lg transition ${filter === 'closed'
                 ? 'bg-gray-600 text-white'
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-            }`}
+              }`}
           >
             Cerradas ({investments.filter(i => i.status === 'closed').length})
           </button>
@@ -314,6 +313,19 @@ export default function Investments() {
           </form>
         </div>
       )}
+                  {/* Nivel de Riesgo */}
+      <div className="mb-6">
+        <label className="block text-sm font-medium mb-2">Nivel de Riesgo</label>
+        <select
+          value={formData.risk_level || 'medio'}
+          onChange={(e) => setFormData({ ...formData, risk_level: e.target.value })}
+          className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500"
+        >
+          <option value="bajo">🟢 Bajo Riesgo</option>
+          <option value="medio">🟡 Riesgo Medio</option>
+          <option value="alto">🔴 Alto Riesgo</option>
+        </select>
+      </div>
 
       {/* Grid de inversiones */}
       {filteredInvestments.length === 0 ? (
@@ -352,13 +364,16 @@ export default function Investments() {
                     <h3 className="font-bold text-lg text-gray-900">{inv.platform}</h3>
                   </div>
                   <p className="text-sm text-gray-600">{inv.type}</p>
+                  {/* AGREGAR BADGE DE RIESGO */}
+                  <div className="mt-2">
+                    <RiskBadge level={inv.risk_level} size="sm" />
+                  </div>
                 </div>
                 <span
-                  className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                    inv.status === 'active'
+                  className={`px-3 py-1 rounded-full text-xs font-semibold ${inv.status === 'active'
                       ? 'bg-green-100 text-green-700'
                       : 'bg-gray-100 text-gray-700'
-                  }`}
+                    }`}
                 >
                   {inv.status === 'active' ? 'Activa' : 'Cerrada'}
                 </span>
@@ -382,9 +397,8 @@ export default function Investments() {
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600">Ganancia/Pérdida</span>
                   <span
-                    className={`font-semibold ${
-                      inv.profit_loss >= 0 ? 'text-green-600' : 'text-red-600'
-                    }`}
+                    className={`font-semibold ${inv.profit_loss >= 0 ? 'text-green-600' : 'text-red-600'
+                      }`}
                   >
                     {inv.profit_loss >= 0 ? '+' : ''}
                     {formatCurrency(inv.profit_loss)}
@@ -394,9 +408,8 @@ export default function Investments() {
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600">Rendimiento</span>
                   <span
-                    className={`font-semibold ${
-                      inv.actual_return_percentage >= 0 ? 'text-green-600' : 'text-red-600'
-                    }`}
+                    className={`font-semibold ${inv.actual_return_percentage >= 0 ? 'text-green-600' : 'text-red-600'
+                      }`}
                   >
                     {inv.actual_return_percentage >= 0 ? '+' : ''}
                     {inv.actual_return_percentage}%
