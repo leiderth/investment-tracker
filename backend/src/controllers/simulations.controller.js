@@ -6,7 +6,9 @@ const {
   calculateFutureValue,
   calculateRequiredMonthlyContribution,
   generateYearlyProjection,
-  compareScenarios
+  generateMonthlyProjection,
+  compareScenarios,
+  performSensitivityAnalysis
 } = require('../utils/simulations');
 
 /**
@@ -24,43 +26,55 @@ exports.calculateSimulation = async (req, res) => {
     } = req.body;
 
     // Validaciones
-    if (!initial_amount || !annual_return_percentage || !years) {
+    if (initial_amount === undefined || annual_return_percentage === undefined || years === undefined) {
       return res.status(400).json({
-        error: 'Faltan campos requeridos: initial_amount, annual_return_percentage, years'
-      });
-    }
-
-    if (initial_amount < 0 || years <= 0 || annual_return_percentage < 0) {
-      return res.status(400).json({
-        error: 'Los valores deben ser positivos'
+        error: 'Faltan campos requeridos: initial_amount, annual_return_percentage, years',
+        code: 'MISSING_FIELDS'
       });
     }
 
     const principal = parseFloat(initial_amount);
     const monthlyContrib = parseFloat(monthly_contribution) || 0;
-    const rate = parseFloat(annual_return_percentage) / 100;
+    const rate = parseFloat(annual_return_percentage);
     const yearsInt = parseInt(years);
-    const frequency = compound_frequency || 'mensual';
+
+    if (principal < 0 || yearsInt <= 0 || yearsInt > 50 || rate < 0 || rate > 100) {
+      return res.status(400).json({
+        error: 'Valores inválidos: initial_amount >= 0, annual_return_percentage 0-100, years 1-50',
+        code: 'INVALID_VALUES'
+      });
+    }
+
+    if (monthlyContrib < 0) {
+      return res.status(400).json({
+        error: 'El aporte mensual debe ser no negativo',
+        code: 'INVALID_CONTRIBUTION'
+      });
+    }
 
     // Calcular resultado
-    const result = calculateFutureValue(principal, monthlyContrib, rate, yearsInt, frequency);
+    const result = calculateFutureValue(principal, monthlyContrib, rate, yearsInt);
 
-    // Generar proyección año por año
-    const projection = generateYearlyProjection(principal, monthlyContrib, rate, yearsInt);
+    // Generar proyecciones
+    const yearlyProjection = generateYearlyProjection(principal, monthlyContrib, rate, yearsInt);
+    
+    // Análisis de sensibilidad
+    const sensitivity = performSensitivityAnalysis(principal, monthlyContrib, rate, yearsInt, 2);
 
     res.json({
       calculation: {
         initial_amount: principal,
         monthly_contribution: monthlyContrib,
-        annual_return: annual_return_percentage,
+        annual_return_percentage: rate,
         years: yearsInt,
-        frequency,
         final_amount: result.finalAmount,
         total_contributions: result.totalContributions,
         total_earnings: result.totalEarnings,
-        roi: result.roi.toFixed(2)
+        roi: parseFloat(result.roi),
+        monthly_average_growth: (result.totalEarnings / (yearsInt * 12)).toFixed(2)
       },
-      yearly_projection: projection
+      yearly_projection: yearlyProjection,
+      sensitivity_analysis: sensitivity
     });
 
   } catch (error) {
@@ -80,9 +94,10 @@ exports.compareScenarios = async (req, res) => {
   try {
     const { initial_amount, monthly_contribution, years } = req.body;
 
-    if (!initial_amount || !years) {
+    if (initial_amount === undefined || years === undefined) {
       return res.status(400).json({
-        error: 'Faltan campos requeridos: initial_amount, years'
+        error: 'Faltan campos requeridos: initial_amount, years',
+        code: 'MISSING_FIELDS'
       });
     }
 
@@ -90,15 +105,62 @@ exports.compareScenarios = async (req, res) => {
     const monthlyContrib = parseFloat(monthly_contribution) || 0;
     const yearsInt = parseInt(years);
 
-    const comparison = compareScenarios(principal, monthlyContrib, yearsInt);
+    if (principal < 0 || yearsInt <= 0 || yearsInt > 50) {
+      return res.status(400).json({
+        error: 'Valores inválidos: initial_amount >= 0, years 1-50',
+        code: 'INVALID_VALUES'
+      });
+    }
+
+    if (monthlyContrib < 0) {
+      return res.status(400).json({
+        error: 'El aporte mensual debe ser no negativo',
+        code: 'INVALID_CONTRIBUTION'
+      });
+    }
+
+    // Generar escenarios
+    const scenarios = compareScenarios(principal, monthlyContrib, yearsInt);
+
+    // Transformar escenarios a objeto con claves de escenario
+    const comparison = {
+      conservador: {
+        finalAmount: scenarios[0].finalValue,
+        totalInvested: scenarios[0].totalInvested,
+        totalEarnings: scenarios[0].earnings,
+        roi: scenarios[0].roi,
+        annualRate: scenarios[0].annualRate,
+        projection: scenarios[0].projection
+      },
+      moderado: {
+        finalAmount: scenarios[1].finalValue,
+        totalInvested: scenarios[1].totalInvested,
+        totalEarnings: scenarios[1].earnings,
+        roi: scenarios[1].roi,
+        annualRate: scenarios[1].annualRate,
+        projection: scenarios[1].projection
+      },
+      agresivo: {
+        finalAmount: scenarios[2].finalValue,
+        totalInvested: scenarios[2].totalInvested,
+        totalEarnings: scenarios[2].earnings,
+        roi: scenarios[2].roi,
+        annualRate: scenarios[2].annualRate,
+        projection: scenarios[2].projection
+      }
+    };
 
     res.json({
+      scenarios,
       comparison,
       input: {
         initial_amount: principal,
         monthly_contribution: monthlyContrib,
         years: yearsInt
-      }
+      },
+      bestScenario: scenarios[scenarios.length - 1].name,
+      difference: scenarios[scenarios.length - 1].finalValue - scenarios[0].finalValue,
+      recommendation: 'Elige el escenario que se adapte a tu perfil de riesgo'
     });
 
   } catch (error) {
@@ -111,37 +173,57 @@ exports.compareScenarios = async (req, res) => {
 };
 
 /**
- * Calcular aporte mensual necesario
+ * Calcular aporte mensual necesario para alcanzar una meta
  * POST /api/simulations/required-contribution
  */
 exports.calculateRequiredContribution = async (req, res) => {
   try {
     const { target_amount, initial_amount, annual_return_percentage, years } = req.body;
 
-    if (!target_amount || !annual_return_percentage || !years) {
+    if (target_amount === undefined || annual_return_percentage === undefined || years === undefined) {
       return res.status(400).json({
-        error: 'Faltan campos requeridos: target_amount, annual_return_percentage, years'
+        error: 'Faltan campos requeridos: target_amount, annual_return_percentage, years',
+        code: 'MISSING_FIELDS'
       });
     }
 
     const target = parseFloat(target_amount);
     const principal = parseFloat(initial_amount) || 0;
-    const rate = parseFloat(annual_return_percentage) / 100;
+    const rate = parseFloat(annual_return_percentage);
     const yearsInt = parseInt(years);
+
+    if (target <= 0 || yearsInt <= 0 || yearsInt > 50 || rate < 0 || rate > 100 || principal < 0) {
+      return res.status(400).json({
+        error: 'Valores inválidos: target_amount > 0, initial_amount >= 0, annual_return_percentage 0-100, years 1-50',
+        code: 'INVALID_VALUES'
+      });
+    }
 
     const requiredMonthly = calculateRequiredMonthlyContribution(target, principal, rate, yearsInt);
 
     // Calcular proyección con ese aporte
     const projection = generateYearlyProjection(principal, requiredMonthly, rate, yearsInt);
+    
+    // Verificar si es alcanzable
+    const finalValue = projection[projection.length - 1]?.balance || 0;
+    const isAchievable = Math.abs(finalValue - target) < 1; // Con margen de 1 unidad
 
     res.json({
       target_amount: target,
       initial_amount: principal,
-      annual_return: annual_return_percentage,
+      annual_return_percentage: rate,
       years: yearsInt,
-      required_monthly_contribution: requiredMonthly.toFixed(2),
-      total_to_contribute: (requiredMonthly * 12 * yearsInt).toFixed(2),
-      yearly_projection: projection
+      required_monthly_contribution: Math.max(0, requiredMonthly),
+      total_to_contribute: Math.max(0, requiredMonthly * 12 * yearsInt),
+      is_achievable: isAchievable,
+      final_projected_value: finalValue,
+      yearly_projection: projection,
+      analysis: {
+        months: yearsInt * 12,
+        total_contributed: principal + Math.max(0, requiredMonthly * 12 * yearsInt),
+        total_earnings: Math.max(0, finalValue - (principal + Math.max(0, requiredMonthly * 12 * yearsInt))),
+        roi: finalValue > 0 ? (((finalValue - principal) / principal) * 100).toFixed(2) : 0
+      }
     });
 
   } catch (error) {

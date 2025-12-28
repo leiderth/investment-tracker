@@ -117,6 +117,30 @@ export const getSimulations = () => api.get('/simulations');
 export const deleteSimulation = (id) => api.delete(`/simulations/${id}`);
 
 // ==========================================
+// FINANCIAL GOALS ENDPOINTS
+// ==========================================
+export const goalsAPI = {
+  getAll: (filters) => api.get('/goals', { params: filters }),
+  getOne: (id) => api.get(`/goals/${id}`),
+  create: (data) => api.post('/goals', data),
+  update: (id, data) => api.put(`/goals/${id}`, data),
+  delete: (id) => api.delete(`/goals/${id}`),
+  getProgress: (id) => api.get(`/goals/${id}/progress`),
+  addProgress: (id, data) => api.post(`/goals/${id}/add-progress`, data),
+  analyzeFeasibility: (id, data) => api.post(`/goals/${id}/analyze-feasibility`, data)
+};
+
+// Exportaciones individuales de Goals
+export const getGoals = (filters) => api.get('/goals', { params: filters });
+export const getGoal = (id) => api.get(`/goals/${id}`);
+export const createGoal = (data) => api.post('/goals', data);
+export const updateGoal = (id, data) => api.put(`/goals/${id}`, data);
+export const deleteGoal = (id) => api.delete(`/goals/${id}`);
+export const getGoalProgress = (id) => api.get(`/goals/${id}/progress`);
+export const addGoalProgress = (id, data) => api.post(`/goals/${id}/add-progress`, data);
+export const analyzeGoalFeasibility = (id, data) => api.post(`/goals/${id}/analyze-feasibility`, data);
+
+// ==========================================
 // EXPORT DEFAULT
 // ==========================================
 export default api;

@@ -18,12 +18,18 @@ const dashboardRoutes = require('./routes/dashboard.routes');
 const transactionsRoutes = require('./routes/transactions.routes');
 const riskRoutes = require('./routes/risk.routes');
 const simulationsRoutes = require('./routes/simulations.routes');
+const goalsRoutes = require('./routes/goals.routes');
+
+// Importar middleware mejorado
+const { errorHandler, notFoundHandler } = require('./middleware/errorHandler');
+const logger = require('./utils/logger');
 
 // Registrar rutas
 app.use('/api/auth', authRoutes);
 app.use('/api/investments', investmentsRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/risk', riskRoutes);
+app.use('/api/goals', goalsRoutes);
 app.use('/api', transactionsRoutes);
 app.use('/api/simulations', simulationsRoutes); 
 
@@ -36,27 +42,20 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// Manejo de rutas no encontradas
-app.use((req, res) => {
-  res.status(404).json({ 
-    error: 'Ruta no encontrada',
-    path: req.path 
-  });
-});
+// Manejo de rutas no encontradas (debe ser antes del error handler)
+app.use(notFoundHandler);
 
-// Manejo de errores global
-app.use((err, req, res, next) => {
-  console.error('Error global:', err);
-  res.status(500).json({ 
-    error: 'Error interno del servidor',
-    message: err.message 
-  });
-});
+// Manejo de errores global MEJORADO
+app.use(errorHandler);
 
 // Iniciar servidor
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
+  logger.info(`🚀 Servidor corriendo en http://localhost:${PORT}`, {
+    database: process.env.DB_NAME,
+    environment: process.env.NODE_ENV || 'development'
+  });
   console.log('='.repeat(50));
   console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
   console.log(`📊 Base de datos: ${process.env.DB_NAME}`);
@@ -66,6 +65,7 @@ app.listen(PORT, () => {
 
 // Manejo de errores no capturados
 process.on('unhandledRejection', (err) => {
+  logger.error('❌ Error no manejado:', err);
   console.error('❌ Error no manejado:', err);
 });
 

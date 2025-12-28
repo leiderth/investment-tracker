@@ -8,6 +8,7 @@ import Register from './pages/Registrer';
 import Dashboard from './pages/Dashboard';
 import Investments from './pages/Investments';
 import Simulations from './pages/Simulations';
+import Goals from './pages/Goals';
 import Layout from './components/layout/Layout';
 
 // Componente para proteger rutas
@@ -96,6 +97,16 @@ function App() {
               <ProtectedRoute>
                 <Layout>
                   <Simulations />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/goals"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <Goals />
                 </Layout>
               </ProtectedRoute>
             }

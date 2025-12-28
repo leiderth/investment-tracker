@@ -1,0 +1,36 @@
+{"timestamp":"2025-12-28T20:21:56.986Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T20:21:58.315Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T20:24:48.181Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T20:37:48.400Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T20:37:49.869Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T20:38:42.578Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":0},"env":"development"}
+{"timestamp":"2025-12-28T20:38:42.584Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":0},"env":"development"}
+{"timestamp":"2025-12-28T20:38:45.018Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":0},"env":"development"}
+{"timestamp":"2025-12-28T20:38:45.025Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":0},"env":"development"}
+{"timestamp":"2025-12-28T20:39:40.714Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":0},"env":"development"}
+{"timestamp":"2025-12-28T20:39:40.719Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":0},"env":"development"}
+{"timestamp":"2025-12-28T20:40:09.945Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":0},"env":"development"}
+{"timestamp":"2025-12-28T20:40:09.952Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":0},"env":"development"}
+{"timestamp":"2025-12-28T20:41:01.412Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":0},"env":"development"}
+{"timestamp":"2025-12-28T20:41:01.420Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":0},"env":"development"}
+{"timestamp":"2025-12-28T20:43:34.705Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":0},"env":"development"}
+{"timestamp":"2025-12-28T20:43:34.710Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":0},"env":"development"}
+{"timestamp":"2025-12-28T20:45:31.646Z","level":"INFO","message":"Meta creada","data":{"user_id":2,"goal_id":1,"name":"motocicleta"},"env":"development"}
+{"timestamp":"2025-12-28T20:45:31.654Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-28T20:46:31.702Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-28T20:46:31.707Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-28T20:46:33.737Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-28T20:46:33.741Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-28T20:48:15.631Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-28T20:48:15.636Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-28T20:49:04.220Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T20:49:33.230Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-28T20:49:33.238Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-28T20:50:54.860Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T20:51:21.831Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-28T20:51:21.837Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-28T20:52:57.575Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T20:54:19.046Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-28T20:54:19.050Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-28T20:54:39.489Z","level":"INFO","message":"Progreso agregado a meta","data":{"user_id":2,"goal_id":"1","amount":100000},"env":"development"}
+{"timestamp":"2025-12-28T20:54:39.498Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}

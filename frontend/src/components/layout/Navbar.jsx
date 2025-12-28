@@ -1,6 +1,6 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { LogOut, LayoutDashboard, TrendingUp, User } from 'lucide-react';
-import { useAuth } from '../../hooks/useAuth'; // ← IMPORTAR DESDE HOOKS
+import { LogOut, LayoutDashboard, TrendingUp, User, Target, Zap } from 'lucide-react';
+import { useAuth } from '../../hooks/useAuth';
 
 export default function Navbar() {
   const { user, logout } = useAuth();
@@ -57,6 +57,30 @@ export default function Navbar() {
             >
               <TrendingUp size={20} />
               <span className="font-medium">Inversiones</span>
+            </Link>
+
+            <Link
+              to="/goals"
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg transition ${
+                isActive('/goals')
+                  ? 'bg-indigo-100 text-indigo-700'
+                  : 'text-gray-600 hover:bg-gray-100'
+              }`}
+            >
+              <Target size={20} />
+              <span className="font-medium">Metas</span>
+            </Link>
+
+            <Link
+              to="/simulations"
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg transition ${
+                isActive('/simulations')
+                  ? 'bg-indigo-100 text-indigo-700'
+                  : 'text-gray-600 hover:bg-gray-100'
+              }`}
+            >
+              <Zap size={20} />
+              <span className="font-medium">Simulaciones</span>
             </Link>
 
             {/* User Menu */}
