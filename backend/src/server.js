@@ -17,6 +17,7 @@ app.use(express.json());
 
 // Importar rutas DESPUÉS de crear app
 const authRoutes = require('./routes/auth.routes');
+const profileRoutes = require('./routes/profile.routes');
 const investmentsRoutes = require('./routes/investments.routes');
 const dashboardRoutes = require('./routes/dashboard.routes');
 const transactionsRoutes = require('./routes/transactions.routes');
@@ -38,6 +39,7 @@ const logger = require('./utils/logger');
 
 // Registrar rutas
 app.use('/api/auth', authRoutes);
+app.use('/api/profile', profileRoutes);
 app.use('/api/chat', chatRoutes); // Chat primero - sin autenticación requerida
 app.use('/api/investments', investmentsRoutes);
 app.use('/api/dashboard', dashboardRoutes);

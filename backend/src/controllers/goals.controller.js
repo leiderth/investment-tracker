@@ -132,17 +132,21 @@ exports.createGoal = asyncHandler(async (req, res) => {
     name,
     description,
     target_amount,
-    current_amount = 0,
-    monthly_savings = 0,
+    current_amount,
+    monthly_savings,
     deadline,
     priority = 'media',
     category,
     notes
   } = req.body;
 
+  // Normalizar valores: convertir strings vacíos a 0
+  const normalizedCurrentAmount = (current_amount === '' || current_amount === null || current_amount === undefined) ? 0 : parseFloat(current_amount);
+  const normalizedMonthlySavings = (monthly_savings === '' || monthly_savings === null || monthly_savings === undefined) ? 0 : parseFloat(monthly_savings);
+
   const targetCents = toCents(target_amount);
-  const currentCents = toCents(current_amount);
-  const savingsCents = toCents(monthly_savings);
+  const currentCents = toCents(normalizedCurrentAmount);
+  const savingsCents = toCents(normalizedMonthlySavings);
 
   const connection = await pool.getConnection();
   

@@ -195,9 +195,14 @@ class Validator {
       errors.push({ field: 'deadline', message: 'La fecha límite debe ser futura' });
     }
 
-    // Monthly savings (opcional pero validar si existe)
-    if (data.monthly_savings && !this.isPositive(data.monthly_savings)) {
-      errors.push({ field: 'monthly_savings', message: 'El ahorro mensual debe ser mayor a cero' });
+    // Current amount (opcional, defaultea a 0 si está vacío)
+    if (data.current_amount !== null && data.current_amount !== undefined && data.current_amount !== '' && !this.isNonNegative(data.current_amount)) {
+      errors.push({ field: 'current_amount', message: 'El monto actual no puede ser negativo' });
+    }
+
+    // Monthly savings (opcional, pero validar si tiene un valor)
+    if (data.monthly_savings !== null && data.monthly_savings !== undefined && data.monthly_savings !== '' && !this.isNonNegative(data.monthly_savings)) {
+      errors.push({ field: 'monthly_savings', message: 'El ahorro mensual no puede ser negativo' });
     }
 
     return errors;

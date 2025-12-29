@@ -2,7 +2,8 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { LogOut, LayoutDashboard, TrendingUp, User, Target, Zap, BarChart3, Globe, LineChart, Bell, Moon, Sun, MessageCircle, Newspaper, Settings, ChevronDown } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import { useTheme } from '../../hooks/useTheme';
-import { useState } from 'react';
+import { profileAPI } from '../../services/api';
+import { useState, useEffect } from 'react';
 
 export default function Navbar() {
   const { user, logout } = useAuth();
@@ -10,6 +11,48 @@ export default function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [profilePicture, setProfilePicture] = useState(null);
+
+  // Load profile picture on mount and when user changes
+  useEffect(() => {
+    const loadProfilePicture = async () => {
+      try {
+        if (user?.id) {
+          // Try to load the picture directly
+          const pictureUrl = `http://localhost:5000/api/profile/picture/${user.id}`;
+          
+          // Check if the picture exists by trying to fetch it
+          const response = await fetch(pictureUrl);
+          if (response.ok) {
+            setProfilePicture(pictureUrl + '?t=' + Date.now()); // Add timestamp to avoid cache
+          } else {
+            setProfilePicture(null);
+          }
+        }
+      } catch (error) {
+        console.log('No profile picture available');
+        setProfilePicture(null);
+      }
+    };
+
+    loadProfilePicture();
+  }, [user?.id]);
+
+  // Listen for profile updates (you can trigger this from Profile page)
+  useEffect(() => {
+    const handleProfileUpdate = () => {
+      // Reload picture when profile is updated
+      if (user?.id) {
+        const pictureUrl = `http://localhost:5000/api/profile/picture/${user.id}?t=${Date.now()}`;
+        fetch(pictureUrl)
+          .then(res => res.ok && setProfilePicture(pictureUrl))
+          .catch(() => setProfilePicture(null));
+      }
+    };
+
+    window.addEventListener('profileUpdated', handleProfileUpdate);
+    return () => window.removeEventListener('profileUpdated', handleProfileUpdate);
+  }, [user?.id]);
 
   console.log('🎨 Navbar rendered. isDark:', isDark);
 
@@ -188,9 +231,18 @@ export default function Navbar() {
                   onClick={toggleUserMenu}
                   className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition"
                 >
-                  <div className="bg-gradient-to-br from-indigo-500 to-purple-600 p-2 rounded-full">
-                    <User size={16} className="text-white" />
-                  </div>
+                  {profilePicture ? (
+                    <img
+                      src={profilePicture}
+                      alt="Foto de perfil"
+                      className="w-8 h-8 rounded-full object-cover border-2 border-indigo-500"
+                      onError={() => setProfilePicture(null)}
+                    />
+                  ) : (
+                    <div className="bg-gradient-to-br from-indigo-500 to-purple-600 p-2 rounded-full">
+                      <User size={16} className="text-white" />
+                    </div>
+                  )}
                   <div className="text-left">
                     <p className="text-sm font-medium text-gray-900 dark:text-white">{user?.name || 'Usuario'}</p>
                     <p className="text-xs text-gray-500 dark:text-gray-400">{user?.email}</p>
@@ -202,9 +254,23 @@ export default function Navbar() {
                 {showUserMenu && (
                   <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-50">
                     {/* Header */}
-                    <div className="px-4 py-2 border-b border-gray-200 dark:border-gray-700">
-                      <p className="text-sm font-semibold text-gray-900 dark:text-white">{user?.name || 'Usuario'}</p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">{user?.email}</p>
+                    <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700 flex items-center gap-3">
+                      {profilePicture ? (
+                        <img
+                          src={profilePicture}
+                          alt="Foto de perfil"
+                          className="w-10 h-10 rounded-full object-cover border-2 border-indigo-500"
+                          onError={() => setProfilePicture(null)}
+                        />
+                      ) : (
+                        <div className="bg-gradient-to-br from-indigo-500 to-purple-600 p-2 rounded-full">
+                          <User size={18} className="text-white" />
+                        </div>
+                      )}
+                      <div className="flex-1">
+                        <p className="text-sm font-semibold text-gray-900 dark:text-white">{user?.name || 'Usuario'}</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">{user?.email}</p>
+                      </div>
                     </div>
 
                     {/* Menu Items */}

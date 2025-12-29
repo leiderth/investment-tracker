@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import { User, Mail, Phone, MapPin, Lock, Save, Upload, Eye, EyeOff } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { User, Mail, Phone, MapPin, Lock, Save, Upload, Eye, EyeOff, CheckCircle, AlertCircle, Loader } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
+import { profileAPI } from '../services/api';
 
 export default function Profile() {
   const { user } = useAuth();
@@ -9,14 +10,20 @@ export default function Profile() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
+  const [profileData, setProfileData] = useState(null);
+  const [profilePicturePreview, setProfilePicturePreview] = useState(null);
+  const [securityLogs, setSecurityLogs] = useState([]);
 
   // Form data for profile info
   const [formData, setFormData] = useState({
-    name: user?.name || '',
-    email: user?.email || '',
-    phone: user?.phone || '',
-    city: user?.city || '',
-    country: user?.country || '',
+    name: '',
+    email: '',
+    phone: '',
+    city: '',
+    country: '',
+    bio: '',
+    birth_date: '',
+    occupation: '',
   });
 
   // Form data for password change
@@ -25,6 +32,40 @@ export default function Profile() {
     newPassword: '',
     confirmPassword: '',
   });
+
+  // Cargar perfil al montar componente
+  useEffect(() => {
+    loadProfile();
+    loadSecurityLogs();
+  }, []);
+
+  const loadProfile = async () => {
+    try {
+      const response = await profileAPI.getProfile();
+      setProfileData(response.data.user);
+      setFormData({
+        name: response.data.user.name || '',
+        email: response.data.user.email || '',
+        phone: response.data.user.phone || '',
+        city: response.data.user.city || '',
+        country: response.data.user.country || '',
+        bio: response.data.user.bio || '',
+        birth_date: response.data.user.birth_date ? response.data.user.birth_date.split('T')[0] : '',
+        occupation: response.data.user.occupation || '',
+      });
+    } catch (error) {
+      setMessage({ type: 'error', text: '❌ Error al cargar el perfil' });
+    }
+  };
+
+  const loadSecurityLogs = async () => {
+    try {
+      const response = await profileAPI.getSecurityLogs();
+      setSecurityLogs(response.data.logs || []);
+    } catch (error) {
+      console.error('Error cargando logs de seguridad:', error);
+    }
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -36,18 +77,60 @@ export default function Profile() {
     setPasswordData(prev => ({ ...prev, [name]: value }));
   };
 
+  const handleProfilePictureChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfilePicturePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleUploadProfilePicture = async () => {
+    if (!profilePicturePreview) return;
+
+    setLoading(true);
+    try {
+      const formDataObj = new FormData();
+      const fileInput = document.getElementById('picture-input');
+      formDataObj.append('picture', fileInput.files[0]);
+
+      const response = await profileAPI.uploadProfilePicture(formDataObj);
+      console.log('✅ Foto uploadada:', response.data);
+      
+      setMessage({ type: 'success', text: '✅ Foto de perfil actualizada' });
+      setProfilePicturePreview(null);
+      
+      // Clear file input
+      fileInput.value = '';
+      
+      // Reload profile
+      await loadProfile();
+      
+      // Trigger navbar update
+      window.dispatchEvent(new Event('profileUpdated'));
+    } catch (error) {
+      console.error('❌ Error:', error);
+      setMessage({ type: 'error', text: '❌ Error al subir la foto: ' + (error.response?.data?.error || error.message) });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleSaveProfile = async (e) => {
     e.preventDefault();
     setLoading(true);
     setMessage(null);
 
     try {
-      // Simulación de guardado - reemplazar con API call real
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const response = await profileAPI.updateProfile(formData);
       setMessage({ type: 'success', text: '✅ Perfil actualizado correctamente' });
       setIsEditing(false);
+      setProfileData(response.data.user);
     } catch (error) {
-      setMessage({ type: 'error', text: '❌ Error al actualizar el perfil' });
+      setMessage({ type: 'error', text: error.response?.data?.error || '❌ Error al actualizar el perfil' });
     } finally {
       setLoading(false);
     }
@@ -71,41 +154,50 @@ export default function Profile() {
     }
 
     try {
-      // Simulación de cambio de contraseña - reemplazar con API call real
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      setMessage({ type: 'success', text: '✅ Contraseña cambiada correctamente' });
+      const response = await profileAPI.changePassword(passwordData);
+      setMessage({ type: 'success', text: response.data.message });
       setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
+      loadSecurityLogs();
     } catch (error) {
-      setMessage({ type: 'error', text: '❌ Error al cambiar la contraseña' });
+      setMessage({ type: 'error', text: error.response?.data?.error || '❌ Error al cambiar la contraseña' });
     } finally {
       setLoading(false);
     }
   };
 
+  if (!profileData) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <Loader className="animate-spin text-indigo-600" size={40} />
+      </div>
+    );
+  }
+
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="max-w-6xl mx-auto">
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Mi Perfil</h1>
-        <p className="text-gray-600 dark:text-gray-400">Manage your account information and security settings</p>
+        <p className="text-gray-600 dark:text-gray-400">Gestiona tu información personal y configuración de seguridad</p>
       </div>
 
       {/* Message */}
       {message && (
-        <div className={`mb-6 p-4 rounded-lg border ${
+        <div className={`mb-6 p-4 rounded-lg border flex items-center gap-3 ${
           message.type === 'success'
             ? 'bg-green-50 dark:bg-green-900/30 border-green-200 dark:border-green-800 text-green-700 dark:text-green-400'
             : 'bg-red-50 dark:bg-red-900/30 border-red-200 dark:border-red-800 text-red-700 dark:text-red-400'
         }`}>
+          {message.type === 'success' ? <CheckCircle size={20} /> : <AlertCircle size={20} />}
           {message.text}
         </div>
       )}
 
       {/* Tabs */}
-      <div className="flex gap-4 mb-6 border-b border-gray-200 dark:border-gray-700">
+      <div className="flex gap-4 mb-6 border-b border-gray-200 dark:border-gray-700 overflow-x-auto">
         <button
           onClick={() => setActiveTab('info')}
-          className={`pb-3 px-4 font-medium transition border-b-2 ${
+          className={`pb-3 px-4 font-medium transition border-b-2 whitespace-nowrap ${
             activeTab === 'info'
               ? 'border-indigo-600 text-indigo-600'
               : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-300'
@@ -118,7 +210,7 @@ export default function Profile() {
         </button>
         <button
           onClick={() => setActiveTab('security')}
-          className={`pb-3 px-4 font-medium transition border-b-2 ${
+          className={`pb-3 px-4 font-medium transition border-b-2 whitespace-nowrap ${
             activeTab === 'security'
               ? 'border-indigo-600 text-indigo-600'
               : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-300'
@@ -141,13 +233,39 @@ export default function Profile() {
             <div className="mb-8">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Foto de Perfil</h3>
               <div className="flex items-center gap-6">
-                <div className="w-24 h-24 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center">
-                  <User size={48} className="text-white" />
+                <div className="w-32 h-32 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center overflow-hidden border-4 border-indigo-200 dark:border-indigo-900">
+                  {profilePicturePreview ? (
+                    <img src={profilePicturePreview} alt="Preview" className="w-full h-full object-cover" />
+                  ) : (
+                    <User size={64} className="text-white" />
+                  )}
                 </div>
-                <button className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition">
-                  <Upload size={18} />
-                  Cambiar Foto
-                </button>
+                <div className="flex flex-col gap-3">
+                  <input
+                    id="picture-input"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleProfilePictureChange}
+                    className="hidden"
+                  />
+                  <button
+                    onClick={() => document.getElementById('picture-input').click()}
+                    className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition"
+                  >
+                    <Upload size={18} />
+                    Seleccionar Foto
+                  </button>
+                  {profilePicturePreview && (
+                    <button
+                      onClick={handleUploadProfilePicture}
+                      disabled={loading}
+                      className="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white rounded-lg transition"
+                    >
+                      <Save size={18} />
+                      {loading ? 'Subiendo...' : 'Guardar Foto'}
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
 
@@ -165,7 +283,7 @@ export default function Profile() {
               </div>
 
               <form onSubmit={handleSaveProfile}>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                   {/* Nombre */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -190,10 +308,10 @@ export default function Profile() {
                       type="email"
                       name="email"
                       value={formData.email}
-                      onChange={handleInputChange}
-                      disabled={!isEditing}
-                      className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-transparent outline-none transition disabled:opacity-50 disabled:cursor-not-allowed"
+                      disabled
+                      className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-600 text-gray-900 dark:text-white rounded-lg outline-none cursor-not-allowed opacity-50"
                     />
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">El email no puede ser modificado</p>
                   </div>
 
                   {/* Teléfono */}
@@ -201,13 +319,32 @@ export default function Profile() {
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       Teléfono
                     </label>
+                    <div className="relative">
+                      <Phone size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                      <input
+                        type="tel"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleInputChange}
+                        disabled={!isEditing}
+                        placeholder="+57 3XX XXX XXXX"
+                        className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-transparent outline-none transition disabled:opacity-50 disabled:cursor-not-allowed"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Ocupación */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Ocupación
+                    </label>
                     <input
-                      type="tel"
-                      name="phone"
-                      value={formData.phone}
+                      type="text"
+                      name="occupation"
+                      value={formData.occupation}
                       onChange={handleInputChange}
                       disabled={!isEditing}
-                      placeholder="+57 3XX XXX XXXX"
+                      placeholder="Ej: Analista Financiero"
                       className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-transparent outline-none transition disabled:opacity-50 disabled:cursor-not-allowed"
                     />
                   </div>
@@ -217,15 +354,18 @@ export default function Profile() {
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       Ciudad
                     </label>
-                    <input
-                      type="text"
-                      name="city"
-                      value={formData.city}
-                      onChange={handleInputChange}
-                      disabled={!isEditing}
-                      placeholder="Bogotá"
-                      className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-transparent outline-none transition disabled:opacity-50 disabled:cursor-not-allowed"
-                    />
+                    <div className="relative">
+                      <MapPin size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                      <input
+                        type="text"
+                        name="city"
+                        value={formData.city}
+                        onChange={handleInputChange}
+                        disabled={!isEditing}
+                        placeholder="Bogotá"
+                        className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-transparent outline-none transition disabled:opacity-50 disabled:cursor-not-allowed"
+                      />
+                    </div>
                   </div>
 
                   {/* País */}
@@ -243,11 +383,42 @@ export default function Profile() {
                       className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-transparent outline-none transition disabled:opacity-50 disabled:cursor-not-allowed"
                     />
                   </div>
+
+                  {/* Fecha de Nacimiento */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Fecha de Nacimiento
+                    </label>
+                    <input
+                      type="date"
+                      name="birth_date"
+                      value={formData.birth_date}
+                      onChange={handleInputChange}
+                      disabled={!isEditing}
+                      className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-transparent outline-none transition disabled:opacity-50 disabled:cursor-not-allowed"
+                    />
+                  </div>
+
+                  {/* Bio */}
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Biografía
+                    </label>
+                    <textarea
+                      name="bio"
+                      value={formData.bio}
+                      onChange={handleInputChange}
+                      disabled={!isEditing}
+                      placeholder="Cuéntanos sobre ti..."
+                      rows="4"
+                      className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-transparent outline-none transition disabled:opacity-50 disabled:cursor-not-allowed resize-none"
+                    />
+                  </div>
                 </div>
 
                 {/* Action Buttons */}
                 {isEditing && (
-                  <div className="flex gap-3 mt-8">
+                  <div className="flex gap-3">
                     <button
                       type="submit"
                       disabled={loading}
@@ -258,7 +429,10 @@ export default function Profile() {
                     </button>
                     <button
                       type="button"
-                      onClick={() => setIsEditing(false)}
+                      onClick={() => {
+                        setIsEditing(false);
+                        loadProfile();
+                      }}
                       className="px-6 py-2 bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600 rounded-lg transition"
                     >
                       Cancelar
@@ -272,81 +446,111 @@ export default function Profile() {
 
         {/* Security Tab */}
         {activeTab === 'security' && (
-          <div>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">Cambiar Contraseña</h3>
+          <div className="space-y-8">
+            {/* Change Password Section */}
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">Cambiar Contraseña</h3>
 
-            <form onSubmit={handleChangePassword} className="max-w-md">
-              {/* Current Password */}
-              <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Contraseña Actual
-                </label>
-                <div className="relative">
+              <form onSubmit={handleChangePassword} className="max-w-md space-y-6">
+                {/* Current Password */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Contraseña Actual
+                  </label>
+                  <div className="relative">
+                    <input
+                      type={showPassword ? 'text' : 'password'}
+                      name="currentPassword"
+                      value={passwordData.currentPassword}
+                      onChange={handlePasswordChange}
+                      className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-transparent outline-none transition"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-400"
+                    >
+                      {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                    </button>
+                  </div>
+                </div>
+
+                {/* New Password */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Nueva Contraseña
+                  </label>
                   <input
-                    type={showPassword ? 'text' : 'password'}
-                    name="currentPassword"
-                    value={passwordData.currentPassword}
+                    type="password"
+                    name="newPassword"
+                    value={passwordData.newPassword}
                     onChange={handlePasswordChange}
                     className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-transparent outline-none transition"
                   />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-400"
-                  >
-                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                  </button>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Mínimo 6 caracteres, con mayúsculas y números</p>
                 </div>
-              </div>
 
-              {/* New Password */}
-              <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Nueva Contraseña
-                </label>
-                <input
-                  type="password"
-                  name="newPassword"
-                  value={passwordData.newPassword}
-                  onChange={handlePasswordChange}
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-transparent outline-none transition"
-                />
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Mínimo 6 caracteres</p>
-              </div>
+                {/* Confirm Password */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Confirmar Contraseña
+                  </label>
+                  <input
+                    type="password"
+                    name="confirmPassword"
+                    value={passwordData.confirmPassword}
+                    onChange={handlePasswordChange}
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-transparent outline-none transition"
+                  />
+                </div>
 
-              {/* Confirm Password */}
-              <div className="mb-8">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Confirmar Contraseña
-                </label>
-                <input
-                  type="password"
-                  name="confirmPassword"
-                  value={passwordData.confirmPassword}
-                  onChange={handlePasswordChange}
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-transparent outline-none transition"
-                />
-              </div>
-
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full px-4 py-2 bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-400 text-white rounded-lg transition font-medium"
-              >
-                {loading ? 'Cambiando...' : 'Cambiar Contraseña'}
-              </button>
-            </form>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full px-4 py-2 bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-400 text-white rounded-lg transition font-medium"
+                >
+                  {loading ? 'Cambiando...' : 'Cambiar Contraseña'}
+                </button>
+              </form>
+            </div>
 
             {/* Security Tips */}
-            <div className="mt-8 p-4 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 rounded-lg">
-              <h4 className="font-semibold text-blue-900 dark:text-blue-200 mb-2">💡 Consejos de Seguridad</h4>
-              <ul className="text-sm text-blue-800 dark:text-blue-300 space-y-1">
+            <div className="p-4 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 rounded-lg">
+              <h4 className="font-semibold text-blue-900 dark:text-blue-200 mb-3">💡 Consejos de Seguridad</h4>
+              <ul className="text-sm text-blue-800 dark:text-blue-300 space-y-2">
                 <li>✓ Usa una contraseña fuerte con mayúsculas, minúsculas y números</li>
                 <li>✓ No compartas tu contraseña con nadie</li>
-                <li>✓ Cambia tu contraseña regularmente</li>
-                <li>✓ Usa contraseñas únicas para cada cuenta</li>
+                <li>✓ Cambia tu contraseña regularmente (cada 3 meses)</li>
+                <li>✓ Usa contraseñas únicas para cada cuenta importante</li>
+                <li>✓ Cierra sesión en dispositivos que no uses frecuentemente</li>
               </ul>
             </div>
+
+            {/* Security Logs */}
+            {securityLogs.length > 0 && (
+              <div className="border-t border-gray-200 dark:border-gray-700 pt-8">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Actividad de Seguridad</h3>
+                <div className="space-y-2 max-h-96 overflow-y-auto">
+                  {securityLogs.map((log) => (
+                    <div key={log.id} className="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <p className="font-medium text-gray-900 dark:text-white">
+                            {log.action.replace('_', ' ').toUpperCase()}
+                          </p>
+                          {log.ip_address && (
+                            <p className="text-xs text-gray-500 dark:text-gray-400">IP: {log.ip_address}</p>
+                          )}
+                        </div>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                          {new Date(log.created_at).toLocaleDateString('es-CO')}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>

@@ -41,6 +41,30 @@ export const login = (data) => api.post('/auth/login', data);
 export const getProfile = () => api.get('/auth/profile');
 
 // ==========================================
+// PROFILE ENDPOINTS
+// ==========================================
+export const profileAPI = {
+  getProfile: () => api.get('/profile'),
+  updateProfile: (data) => api.put('/profile', data),
+  changePassword: (data) => api.post('/profile/change-password', data),
+  uploadProfilePicture: (formData) => api.post('/profile/upload-picture', formData),
+  getSecurityLogs: () => api.get('/profile/security-logs'),
+  getProfilePicture: (userId) => api.get(`/profile/picture/${userId}`)
+};
+
+// Exportaciones individuales de Profile
+export const getUserProfile = () => api.get('/profile');
+export const updateUserProfile = (data) => api.put('/profile', data);
+export const changeUserPassword = (data) => api.post('/profile/change-password', data);
+export const uploadUserProfilePicture = (formData) => api.post('/profile/upload-picture', formData, {
+  headers: {
+    'Content-Type': 'multipart/form-data'
+  }
+});
+export const getUserSecurityLogs = () => api.get('/profile/security-logs');
+export const getUserProfilePicture = (userId) => api.get(`/profile/picture/${userId}`);
+
+// ==========================================
 // INVESTMENTS ENDPOINTS
 // ==========================================
 export const investmentsAPI = {

@@ -44,7 +44,7 @@ exports.getInvestments = async (req, res) => {
     query += ' ORDER BY i.created_at DESC';
 
     console.log('📊 [getInvestments] Ejecutando query con userId:', userId, '| params:', params);
-    const [investments] = await pool.query(query, params);
+    const [investments] = await pool.execute(query, params);
 
     console.log('📊 [getInvestments] Resultado de BD:', investments.length, 'inversiones encontradas');
 
@@ -237,7 +237,7 @@ exports.getInvestmentById = async (req, res) => {
     const { id } = req.params;
     const userId = req.user.id;
 
-    const [investments] = await pool.query(
+    const [investments] = await pool.execute(
       `SELECT 
         i.*,
         ROUND(((i.current_amount_cents - i.initial_amount_cents) / i.initial_amount_cents) * 100, 2) as actual_return_percentage,
@@ -254,7 +254,7 @@ exports.getInvestmentById = async (req, res) => {
     const investment = investments[0];
 
     // Obtener transacciones asociadas
-    const [transactions] = await pool.query(
+    const [transactions] = await pool.execute(
       `SELECT * FROM transactions WHERE investment_id = ? ORDER BY date DESC`,
       [id]
     );
@@ -440,7 +440,7 @@ exports.deleteInvestment = async (req, res) => {
     const userId = req.user.id;
 
     // Verificar que existe y pertenece al usuario
-    const [investments] = await pool.query(
+    const [investments] = await pool.execute(
       'SELECT id, status FROM investments WHERE id = ? AND user_id = ?',
       [id, userId]
     );
@@ -454,7 +454,7 @@ exports.deleteInvestment = async (req, res) => {
     }
 
     // Soft delete: cambiar status a 'closed'
-    await pool.query(
+    await pool.execute(
       `UPDATE investments 
        SET status = 'closed', updated_at = NOW() 
        WHERE id = ? AND user_id = ?`,
@@ -485,7 +485,7 @@ exports.getPortfolioAnalysis = async (req, res) => {
     if (!userId) return res.status(401).json({ error: 'No autenticado' });
 
     // Obtener todas las inversiones del usuario
-    const [investments] = await pool.query(
+    const [investments] = await pool.execute(
       `SELECT id, name, type, status, risk_level,
               initial_amount_cents, current_amount_cents, created_at 
        FROM investments 
@@ -619,7 +619,7 @@ exports.getAIRecommendations = async (req, res) => {
     if (!userId) return res.status(401).json({ error: 'No autenticado' });
 
     // Obtener datos del portafolio
-    const [investments] = await pool.query(
+    const [investments] = await pool.execute(
       `SELECT id, name, type, status, risk_level,
               initial_amount_cents, current_amount_cents, created_at 
        FROM investments 
