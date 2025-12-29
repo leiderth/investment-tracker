@@ -18,6 +18,7 @@ export default function ChatFinBot() {
   const [isLoading, setIsLoading] = useState(false);
   const [showSidebar, setShowSidebar] = useState(true);
   const [showWelcome, setShowWelcome] = useState(true);
+  const [feedbackStates, setFeedbackStates] = useState({});
   const messagesEndRef = useRef(null);
 
   // Auto-scroll al último mensaje
@@ -109,6 +110,37 @@ export default function ChatFinBot() {
   };
 
   /**
+   * Maneja el feedback del usuario en las respuestas (ML)
+   */
+  const handleFeedback = async (messageIndex, feedback) => {
+    try {
+      if (messageIndex < 1) return; // Saltar si no hay mensaje anterior
+      
+      const userMessage = messages[messageIndex - 1];
+      const aiMessage = messages[messageIndex];
+
+      if (userMessage.role !== 'user' || aiMessage.role !== 'assistant') return;
+
+      // Enviar feedback al backend para ML
+      const response = await axios.post(`${API_BASE_URL}/chat/feedback`, {
+        message: userMessage.content,
+        response: aiMessage.content,
+        feedback: feedback === 'useful' ? 'útil' : 'no útil'
+      });
+
+      // Actualizar estado de feedback
+      setFeedbackStates((prev) => ({
+        ...prev,
+        [messageIndex]: feedback
+      }));
+
+      console.log('✅ Feedback registrado:', response.data);
+    } catch (error) {
+      console.error('Error registrando feedback:', error);
+    }
+  };
+
+  /**
    * Renderiza un mensaje
    */
   const renderMessage = (msg) => {
@@ -165,6 +197,25 @@ export default function ChatFinBot() {
                   ))}
                 </div>
               )}
+
+              {/* ML Feedback Buttons */}
+              <div className="message-feedback">
+                <span className="feedback-label">¿Te fue útil?</span>
+                <button
+                  className={`feedback-btn ${feedbackStates[messages.indexOf(msg)] === 'useful' ? 'active-useful' : ''}`}
+                  onClick={() => handleFeedback(messages.indexOf(msg), 'useful')}
+                  title="Esta respuesta fue útil"
+                >
+                  👍 Útil
+                </button>
+                <button
+                  className={`feedback-btn ${feedbackStates[messages.indexOf(msg)] === 'not-useful' ? 'active-not-useful' : ''}`}
+                  onClick={() => handleFeedback(messages.indexOf(msg), 'not-useful')}
+                  title="Esta respuesta no fue útil"
+                >
+                  👎 No útil
+                </button>
+              </div>
             </>
           )}
         </div>

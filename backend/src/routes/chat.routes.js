@@ -24,4 +24,8 @@ router.get('/profile/:userId', chatController.getUserProfile.bind(chatController
 // Elimina una conversación
 router.delete('/conversation/:conversationId', chatController.deleteConversation.bind(chatController));
 
+// Feedback y ML
+router.post('/feedback', chatController.sendFeedback.bind(chatController));
+router.get('/ml-stats', chatController.getMLStats.bind(chatController));
+
 module.exports = router;

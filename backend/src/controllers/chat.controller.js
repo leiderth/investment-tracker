@@ -4,6 +4,7 @@
  */
 
 const financeGPTAdvanced = require('../services/financeGPT_advanced');
+const mlService = require('../services/mlService');
 
 // Simulamos almacenamiento en memoria para sesiones
 const conversationSessions = {};
@@ -309,6 +310,66 @@ O simplemente cuéntame sobre tu situación financiera para que entienda mejor c
     } catch (error) {
       console.error('Error en getUserConversations:', error);
       res.status(500).json({ error: 'Error obteniendo conversaciones' });
+    }
+  }
+
+  /**
+   * Recibe feedback del usuario sobre la respuesta
+   * POST /api/chat/feedback
+   * Body: { messageId, feedback: 'useful' | 'not-useful' | 'perfect' }
+   */
+  async sendFeedback(req, res) {
+    try {
+      const { message, response, feedback } = req.body;
+
+      if (!message || !response || !feedback) {
+        return res.status(400).json({ error: 'Faltan parámetros' });
+      }
+
+      // Registrar en ML Service
+      const result = mlService.recordConversation(message, response, feedback);
+
+      // Predecir calidad basada en el feedback
+      const predictedQuality = mlService.predictQuality(message, response);
+
+      res.json({
+        success: true,
+        recorded: true,
+        message: 'Gracias por tu feedback! Esto nos ayuda a mejorar',
+        feedback,
+        predictedQuality,
+        conversationsRecorded: result.totalConversations,
+        nextRetrainAt: result.nextRetrainAt
+      });
+    } catch (error) {
+      console.error('Error en sendFeedback:', error);
+      res.status(500).json({ error: 'Error procesando feedback' });
+    }
+  }
+
+  /**
+   * Obtiene estadísticas del modelo de ML
+   * GET /api/chat/ml-stats
+   */
+  async getMLStats(req, res) {
+    try {
+      const stats = mlService.getStatistics();
+      const recentConversations = mlService.getRecentConversations(5);
+
+      res.json({
+        success: true,
+        statistics: stats,
+        recentConversations,
+        modelInfo: {
+          version: '1.0',
+          algorithm: 'KNN + SVM',
+          trainingMethod: 'Online Learning',
+          lastUpdated: new Date()
+        }
+      });
+    } catch (error) {
+      console.error('Error en getMLStats:', error);
+      res.status(500).json({ error: 'Error obteniendo estadísticas' });
     }
   }
 }

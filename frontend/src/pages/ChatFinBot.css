@@ -611,3 +611,52 @@
 .sidebar-content::-webkit-scrollbar-thumb:hover {
   background: #9ca3af;
 }
+
+/* === ML FEEDBACK BUTTONS === */
+.message-feedback {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #e5e5e5;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.feedback-label {
+  font-weight: 500;
+  color: #6b7280;
+}
+
+.feedback-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  background: #f3f4f6;
+  border: 1px solid #e5e5e5;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  color: #6b7280;
+  transition: all 0.2s ease;
+}
+
+.feedback-btn:hover {
+  background: #e5e7eb;
+  border-color: #d1d5db;
+  color: #374151;
+}
+
+.feedback-btn.active-useful {
+  background: #dcfce7;
+  border-color: #86efac;
+  color: #166534;
+}
+
+.feedback-btn.active-not-useful {
+  background: #fee2e2;
+  border-color: #fca5a5;
+  color: #7f1d1d;
+}
