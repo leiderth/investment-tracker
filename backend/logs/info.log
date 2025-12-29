@@ -404,3 +404,6 @@
 {"timestamp":"2025-12-29T19:47:12.621Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":1,"count":0},"env":"development"}
 {"timestamp":"2025-12-29T19:47:44.260Z","level":"INFO","message":"Meta creada","data":{"user_id":1,"goal_id":1,"name":"vcb"},"env":"development"}
 {"timestamp":"2025-12-29T19:47:44.269Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":1,"count":1},"env":"development"}
+{"timestamp":"2025-12-29T19:55:14.820Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment_tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T19:55:24.995Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":1,"count":1},"env":"development"}
+{"timestamp":"2025-12-29T19:55:25.001Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":1,"count":1},"env":"development"}
