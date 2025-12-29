@@ -1,22 +1,83 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { dashboardAPI } from '../services/api';
-import StatCard from '../components/common/StatCard';
-import PatrimonyChart from '../components/common/PatrimonyChart';
-import RiskAnalysisCard from '../components/risk/RiskAnalysisCard';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import api from '../services/api';
 import {
   TrendingUp,
   Wallet,
   DollarSign,
   Activity,
   PieChart,
-  Plus
+  Plus,
+  AlertCircle
 } from 'lucide-react';
-import { formatCurrency, formatPercent, getProfitColor, getInvestmentTypeDisplay } from '../utils/format';
+
+const formatCurrency = (amount) => {
+  if (amount === null || amount === undefined) return '$0';
+  return new Intl.NumberFormat('es-CO', {
+    style: 'currency',
+    currency: 'COP',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  }).format(amount);
+};
+
+const formatPercent = (value) => {
+  if (value === null || value === undefined) return '0.00%';
+  const num = parseFloat(value);
+  return isNaN(num) ? '0.00%' : `${num.toFixed(2)}%`;
+};
+
+const getProfitColor = (value) => {
+  if (value === null || value === undefined) return 'text-gray-600';
+  const numValue = parseFloat(value);
+  if (numValue > 0) return 'text-green-600';
+  if (numValue < 0) return 'text-red-600';
+  return 'text-gray-600';
+};
+
+const getInvestmentTypeDisplay = (type) => {
+  const types = {
+    'CDT': '🏦 CDT',
+    'acciones': '📈 Acciones',
+    'ETF': '📊 ETF',
+    'cripto': '₿ Cripto',
+    'negocio': '💼 Negocio',
+    'otro': '💰 Otro'
+  };
+  return types[type] || type;
+};
+
+// StatCard Component
+function StatCard({ title, value, icon: Icon, color = 'primary', subtitle }) {
+  const colorClasses = {
+    primary: 'bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-400',
+    green: 'bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-400',
+    red: 'bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-400',
+    yellow: 'bg-yellow-100 dark:bg-yellow-900 text-yellow-600 dark:text-yellow-400',
+    purple: 'bg-purple-100 dark:bg-purple-900 text-purple-600 dark:text-purple-400'
+  };
+
+  return (
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow border border-gray-100 dark:border-gray-700">
+      <div className="flex items-center justify-between">
+        <div className="flex-1">
+          <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{title}</p>
+          <p className="text-2xl font-bold text-gray-900 dark:text-white">{value}</p>
+          {subtitle && (
+            <p className="text-xs text-gray-500 mt-1">{subtitle}</p>
+          )}
+        </div>
+        <div className={`p-3 rounded-lg ${colorClasses[color]}`}>
+          <Icon className="w-6 h-6" />
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function Dashboard() {
-  const [stats, setStats] = useState(null);
-  const [evolution, setEvolution] = useState([]);
+  const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -27,18 +88,19 @@ export default function Dashboard() {
   const loadDashboard = async () => {
     try {
       setLoading(true);
-      setError(''); // Limpiar errores previos
+      setError('');
       
-      const [statsRes, evolutionRes] = await Promise.all([
-        dashboardAPI.getStats(),
-        dashboardAPI.getEvolution()
-      ]);
+      // Usar el endpoint consolidado /api/dashboard/complete
+      const response = await api.get('/dashboard/complete');
       
-      setStats(statsRes.data);
-      setEvolution(evolutionRes.data);
-    } catch (error) {
-      console.error('Error cargando el dashboard:', error);
-      setError(error.response?.data?.message || 'Error cargando el dashboard');
+      if (response.data && response.data.data) {
+        setDashboardData(response.data.data);
+      } else {
+        throw new Error('Datos inválidos del servidor');
+      }
+    } catch (err) {
+      console.error('Error cargando dashboard:', err);
+      setError(err.message || 'Error al cargar el dashboard');
     } finally {
       setLoading(false);
     }
@@ -54,162 +116,227 @@ export default function Dashboard() {
 
   if (error) {
     return (
-      <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
-        {error}
+      <div className="space-y-6">
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2">
+          <AlertCircle size={20} />
+          <div>
+            <p className="font-medium">Error al cargar el dashboard</p>
+            <p className="text-sm mt-1">{error}</p>
+            <button 
+              onClick={loadDashboard}
+              className="mt-2 text-sm underline hover:no-underline"
+            >
+              Reintentar
+            </button>
+          </div>
+        </div>
       </div>
     );
   }
 
-  // Validar que stats existe antes de desestructurar
-  if (!stats) {
+  if (!dashboardData) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-xl text-gray-600">No hay datos disponibles</div>
+      <div className="space-y-6">
+        <div className="bg-yellow-50 border border-yellow-200 text-yellow-700 px-4 py-3 rounded-lg flex items-center gap-2">
+          <AlertCircle size={20} />
+          <div>
+            <p className="font-medium">Sin datos disponibles</p>
+            <p className="text-sm mt-1">No hay inversiones registradas. Comienza registrando tu primera inversión.</p>
+          </div>
+        </div>
+        <div className="bg-indigo-50 border-2 border-indigo-200 rounded-lg p-6">
+          <div className="text-center py-8">
+            <Wallet className="w-16 h-16 text-indigo-600 mx-auto mb-4" />
+            <h3 className="text-xl font-bold text-gray-900 mb-2">¡Comienza a invertir!</h3>
+            <p className="text-gray-600 mb-4">Registra tu primera inversión</p>
+            <Link to="/investments" className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 inline-flex items-center gap-2">
+              <Plus className="w-5 h-5" />
+              <span>Registrar Inversión</span>
+            </Link>
+          </div>
+        </div>
       </div>
     );
   }
 
-  const { summary, byType, topInvestments } = stats;
+  const stats = dashboardData.stats || {};
+  const evolution = dashboardData.evolution || [];
+  const riskAnalysis = dashboardData.riskAnalysis || {};
+  const advancedMetrics = dashboardData.advancedMetrics || {};
+  const topInvestments = dashboardData.topInvestments || [];
+  const byType = dashboardData.byType || [];
 
   return (
     <div className="space-y-8">
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-          <p className="text-gray-600 mt-1">Resumen de tus inversiones</p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Dashboard</h1>
+          <p className="text-gray-600 dark:text-gray-400 mt-1">Resumen de tus inversiones</p>
         </div>
         <Link
           to="/investments"
-          className="btn-primary flex items-center space-x-2"
+          className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 flex items-center gap-2"
         >
           <Plus className="w-5 h-5" />
           <span>Nueva Inversión</span>
         </Link>
       </div>
 
-      {/* Métricas principales */}
+      {/* Métricas Principales */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard
           title="Patrimonio Total"
-          value={formatCurrency(summary?.totalPatrimony || 0)}
+          value={formatCurrency(stats.totalPatrimony || 0)}
           icon={Wallet}
           color="primary"
         />
-
         <StatCard
           title="Capital Invertido"
-          value={formatCurrency(summary?.totalCapital || 0)}
+          value={formatCurrency(stats.totalCapital || 0)}
           icon={DollarSign}
           color="purple"
         />
-
         <StatCard
           title="Ganancia/Pérdida"
-          value={formatCurrency(summary?.totalProfit || 0)}
+          value={formatCurrency(stats.totalProfit || 0)}
           icon={TrendingUp}
-          color={(summary?.totalProfit || 0) >= 0 ? 'green' : 'red'}
-          subtitle={`${formatPercent(summary?.generalReturn || 0)} de rendimiento`}
+          color={(stats.totalProfit || 0) >= 0 ? 'green' : 'red'}
+          subtitle={`${formatPercent(stats.returnPercentage || 0)} de rendimiento`}
         />
-
         <StatCard
           title="Inversiones Activas"
-          value={summary?.activeInvestments || 0}
+          value={stats.activeInvestments || 0}
           icon={Activity}
           color="yellow"
-          subtitle={`${summary?.totalInvestments || 0} en total`}
+          subtitle={`${stats.totalInvestments || 0} en total`}
         />
       </div>
 
-      {/* AGREGAR ANÁLISIS DE RIESGO */}
-      <div className="mb-8">
-        <RiskAnalysisCard />
+      {/* Análisis de Riesgo */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 border border-gray-100 dark:border-gray-700">
+        <div className="flex items-center gap-2 mb-4">
+          <TrendingUp className="w-5 h-5 text-indigo-600" />
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white">Resumen de Riesgo</h2>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+            <p className="text-sm text-gray-600 dark:text-gray-300">Volatilidad Esperada</p>
+            <p className="text-lg font-bold text-gray-900 dark:text-white mt-1">
+              {formatPercent(advancedMetrics.volatility || 0)}
+            </p>
+          </div>
+          <div className="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+            <p className="text-sm text-gray-600 dark:text-gray-300">Max Drawdown</p>
+            <p className="text-lg font-bold text-red-600 dark:text-red-400 mt-1">
+              {formatPercent(advancedMetrics.maxDrawdown || 0)}
+            </p>
+          </div>
+          <div className="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+            <p className="text-sm text-gray-600 dark:text-gray-300">Índice Sharpe</p>
+            <p className="text-lg font-bold text-green-600 dark:text-green-400 mt-1">
+              {(advancedMetrics.sharpeRatio || 0).toFixed(3)}
+            </p>
+          </div>
+        </div>
       </div>
 
-      {/* Gráfico de evolución */}
-      {summary?.totalInvestments > 0 && (
-        <div className="card">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">
+      {/* Gráfico Evolución */}
+      {stats.totalInvestments > 0 && evolution.length > 0 && (
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 border border-gray-100 dark:border-gray-700">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
             Evolución del Patrimonio (últimos 30 días)
           </h2>
-          <PatrimonyChart data={evolution} />
+          <ResponsiveContainer width="100%" height={300}>
+            <LineChart data={evolution}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis 
+                dataKey="date" 
+                tick={{ fontSize: 12 }}
+                stroke="#9CA3AF"
+              />
+              <YAxis 
+                tick={{ fontSize: 12 }}
+                stroke="#9CA3AF"
+                tickFormatter={(value) => `$${(value / 1000000).toFixed(0)}M`}
+              />
+              <Tooltip 
+                formatter={(value) => formatCurrency(value)}
+                labelFormatter={(label) => `Fecha: ${label}`}
+                contentStyle={{
+                  backgroundColor: '#fff',
+                  border: '1px solid #e5e7eb',
+                  borderRadius: '8px'
+                }}
+              />
+              <Legend />
+              <Line 
+                type="monotone" 
+                dataKey="value" 
+                stroke="#4f46e5" 
+                strokeWidth={2}
+                dot={false}
+                name="Valor del Portafolio"
+              />
+            </LineChart>
+          </ResponsiveContainer>
         </div>
       )}
 
-      {/* Distribución por tipo */}
+      {/* Distribución y Top */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Tabla por tipo */}
-        <div className="card">
-          <div className="flex items-center space-x-2 mb-4">
-            <PieChart className="w-5 h-5 text-primary-600" />
-            <h2 className="text-xl font-bold text-gray-900">Distribución por Tipo</h2>
+        {/* Distribución por Tipo */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 border border-gray-100 dark:border-gray-700">
+          <div className="flex items-center gap-2 mb-4">
+            <PieChart className="w-5 h-5 text-indigo-600" />
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white">Distribución por Tipo</h2>
           </div>
-
           {byType && byType.length > 0 ? (
             <div className="space-y-3">
               {byType.map((type, index) => (
-                <div
-                  key={index}
-                  className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
-                >
+                <div key={index} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600">
                   <div>
-                    <p className="font-medium text-gray-900">
-                      {getInvestmentTypeDisplay(type.type)}
-                    </p>
-                    <p className="text-sm text-gray-600">
-                      {type.count} {type.count === 1 ? 'inversión' : 'inversiones'}
-                    </p>
+                    <p className="font-medium text-gray-900 dark:text-white">{getInvestmentTypeDisplay(type.type)}</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">{type.count} {type.count === 1 ? 'inversión' : 'inversiones'}</p>
                   </div>
                   <div className="text-right">
-                    <p className="font-bold text-gray-900">
-                      {formatCurrency(type.total)}
-                    </p>
-                    <p className={`text-sm font-medium ${getProfitColor(type.avgReturn)}`}>
-                      {formatPercent(type.avgReturn)}
-                    </p>
+                    <p className="font-bold text-gray-900 dark:text-white">{formatCurrency(type.total)}</p>
+                    <p className={`text-sm font-medium ${getProfitColor(type.avgReturn)}`}>{formatPercent(type.avgReturn)}</p>
                   </div>
                 </div>
               ))}
             </div>
           ) : (
-            <p className="text-gray-600 text-center py-8">
-              No tienes inversiones activas
-            </p>
+            <p className="text-gray-600 text-center py-8">No hay inversiones</p>
           )}
         </div>
 
-        {/* Top inversiones */}
-        <div className="card">
-          <div className="flex items-center space-x-2 mb-4">
-            <TrendingUp className="w-5 h-5 text-primary-600" />
-            <h2 className="text-xl font-bold text-gray-900">Top Inversiones</h2>
+        {/* Top Inversiones */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 border border-gray-100 dark:border-gray-700">
+          <div className="flex items-center gap-2 mb-4">
+            <TrendingUp className="w-5 h-5 text-indigo-600" />
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white">Top Inversiones</h2>
           </div>
-
           {topInvestments && topInvestments.length > 0 ? (
             <div className="space-y-3">
-              {topInvestments.map((inv, index) => (
+              {topInvestments.slice(0, 5).map((inv, index) => (
                 <Link
                   key={inv.id}
                   to={`/investments/${inv.id}`}
-                  className="block p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                  className="block p-3 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
-                      <div className="flex items-center space-x-2 mb-1">
-                        <span className="text-xs font-bold text-gray-500">#{index + 1}</span>
-                        <p className="font-medium text-gray-900">
-                          {getInvestmentTypeDisplay(inv.type)}
-                        </p>
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-xs font-bold text-gray-500 dark:text-gray-400">#{index + 1}</span>
+                        <p className="font-medium text-gray-900 dark:text-white">{getInvestmentTypeDisplay(inv.type)}</p>
                       </div>
-                      <p className="text-sm text-gray-600">{inv.platform}</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">{inv.platform || inv.name}</p>
                     </div>
                     <div className="text-right">
-                      <p className="font-bold text-gray-900">
-                        {formatCurrency(inv.currentAmount)}
-                      </p>
+                      <p className="font-bold text-gray-900 dark:text-white">{formatCurrency(inv.value || inv.currentAmount)}</p>
                       <p className={`text-sm font-medium ${getProfitColor(inv.returnPercentage)}`}>
-                        {inv.returnPercentage > 0 ? '+' : ''}
-                        {formatPercent(inv.returnPercentage)}
+                        {inv.returnPercentage > 0 ? '+' : ''}{formatPercent(inv.returnPercentage)}
                       </p>
                     </div>
                   </div>
@@ -217,27 +344,21 @@ export default function Dashboard() {
               ))}
             </div>
           ) : (
-            <p className="text-gray-600 text-center py-8">
-              No tienes inversiones registradas
-            </p>
+            <p className="text-gray-600 text-center py-8">No hay inversiones</p>
           )}
         </div>
       </div>
 
-      {/* Call to action si no hay inversiones */}
-      {summary?.totalInvestments === 0 && (
-        <div className="card bg-primary-50 border-2 border-primary-200">
+      {/* Call to Action */}
+      {stats.totalInvestments === 0 && (
+        <div className="bg-indigo-50 border-2 border-indigo-200 rounded-lg p-6">
           <div className="text-center py-8">
-            <Wallet className="w-16 h-16 text-primary-600 mx-auto mb-4" />
-            <h3 className="text-xl font-bold text-gray-900 mb-2">
-              ¡Comienza a invertir hoy!
-            </h3>
-            <p className="text-gray-600 mb-4">
-              Registra tu primera inversión y empieza a hacer crecer tu patrimonio
-            </p>
-            <Link to="/investments" className="btn-primary inline-flex items-center space-x-2">
+            <Wallet className="w-16 h-16 text-indigo-600 mx-auto mb-4" />
+            <h3 className="text-xl font-bold text-gray-900 mb-2">¡Comienza a invertir!</h3>
+            <p className="text-gray-600 mb-4">Registra tu primera inversión</p>
+            <Link to="/investments" className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 inline-flex items-center gap-2">
               <Plus className="w-5 h-5" />
-              <span>Registrar Primera Inversión</span>
+              <span>Registrar Inversión</span>
             </Link>
           </div>
         </div>

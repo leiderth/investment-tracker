@@ -473,3 +473,237 @@ exports.deleteInvestment = async (req, res) => {
     });
   }
 };
+
+/**
+ * @route   GET /api/investments/portfolio-analysis
+ * @desc    Obtener análisis completo del portafolio con gráficos
+ * @access  Private
+ */
+exports.getPortfolioAnalysis = async (req, res) => {
+  try {
+    const userId = req.user?.id || req.user?.userId;
+    if (!userId) return res.status(401).json({ error: 'No autenticado' });
+
+    // Obtener todas las inversiones del usuario
+    const [investments] = await pool.query(
+      `SELECT id, name, type, status, risk_level,
+              initial_amount_cents, current_amount_cents, created_at 
+       FROM investments 
+       WHERE user_id = ? AND status != 'closed'
+       ORDER BY current_amount_cents DESC`,
+      [userId]
+    );
+
+    // Calcular resumen
+    const summary = {
+      totalValue: 0,
+      totalInvested: 0,
+      investmentCount: investments.length,
+    };
+
+    // Agrupar por tipo
+    const byType = {};
+    const byStatus = {};
+    const byRisk = {};
+    const investmentDetails = [];
+
+    investments.forEach(inv => {
+      const currentValue = inv.current_amount_cents / 100;
+      const investedAmount = inv.initial_amount_cents / 100;
+
+      summary.totalValue += currentValue;
+      summary.totalInvested += investedAmount;
+
+      // Por tipo
+      if (!byType[inv.type]) {
+        byType[inv.type] = 0;
+      }
+      byType[inv.type] += currentValue;
+
+      // Por estado
+      if (!byStatus[inv.status]) {
+        byStatus[inv.status] = 0;
+      }
+      byStatus[inv.status] += currentValue;
+
+      // Por riesgo
+      if (!byRisk[inv.risk_level]) {
+        byRisk[inv.risk_level] = 0;
+      }
+      byRisk[inv.risk_level] += currentValue;
+
+      // Detalle de inversión
+      investmentDetails.push({
+        id: inv.id,
+        name: inv.name,
+        type: inv.type,
+        status: inv.status,
+        riskLevel: inv.risk_level,
+        amountInvested: investedAmount,
+        currentValue: currentValue,
+        annualReturn: 0, // Campo no disponible en tabla actual
+        createdAt: inv.created_at,
+      });
+    });
+
+    // Convertir objetos a arrays para gráficos
+    const byTypeArray = Object.entries(byType).map(([name, value]) => ({
+      name,
+      value: Math.round(value),
+    }));
+
+    const byStatusArray = Object.entries(byStatus).map(([name, value]) => ({
+      name,
+      value: Math.round(value),
+    }));
+
+    const byRiskArray = Object.entries(byRisk).map(([name, value]) => ({
+      name,
+      value: Math.round(value),
+    }));
+
+    // Calcular métricas
+    const profitLoss = summary.totalValue - summary.totalInvested;
+    const returnPercentage = summary.totalInvested > 0 ? ((profitLoss / summary.totalInvested) * 100) : 0;
+    
+    // Diversificación (0-10): Más tipos = más diversificado
+    const diversificationScore = Math.min((byTypeArray.length * 1.5) + (investments.length * 0.1), 10);
+
+    // Necesidad de rebalanceo
+    const maxAllocation = Math.max(...byTypeArray.map(x => x.value)) / summary.totalValue;
+    const needsRebalancing = maxAllocation > 0.6; // Si un tipo es >60% del portafolio
+
+    const metrics = {
+      diversificationScore: parseFloat(diversificationScore.toFixed(1)),
+      needsRebalancing,
+      rebalanceRecommendations: [],
+      riskDistribution: byRiskArray,
+    };
+
+    if (needsRebalancing) {
+      const overweighted = byTypeArray.filter(x => (x.value / summary.totalValue) > 0.5);
+      overweighted.forEach(item => {
+        metrics.rebalanceRecommendations.push(
+          `Reduce ${item.name} (${((item.value / summary.totalValue) * 100).toFixed(1)}% del portafolio)`
+        );
+      });
+    }
+
+    res.json({
+      summary,
+      byType: byTypeArray,
+      byStatus: byStatusArray,
+      byRisk: byRiskArray,
+      investments: investmentDetails,
+      metrics,
+      performance: [], // Se puede agregar histórico si es necesario
+    });
+
+  } catch (error) {
+    console.error('❌ [getPortfolioAnalysis] Error:', error);
+    res.status(500).json({ error: 'Error al obtener análisis del portafolio', details: error.message });
+  }
+};
+
+/**
+ * @route   GET /api/investments/ai-recommendations
+ * @desc    Obtener recomendaciones IA para el portafolio
+ * @access  Private
+ */
+exports.getAIRecommendations = async (req, res) => {
+  try {
+    const FinancialAIService = require('../services/financialAIService');
+    const AIRecommendationsService = require('../services/aiRecommendationsService');
+    
+    const userId = req.user?.id || req.user?.userId;
+    if (!userId) return res.status(401).json({ error: 'No autenticado' });
+
+    // Obtener datos del portafolio
+    const [investments] = await pool.query(
+      `SELECT id, name, type, status, risk_level,
+              initial_amount_cents, current_amount_cents, created_at 
+       FROM investments 
+       WHERE user_id = ? AND status != 'closed'`,
+      [userId]
+    );
+
+    // Preparar datos
+    const summary = {
+      totalValue: 0,
+      totalInvested: 0,
+      investmentCount: investments.length,
+    };
+
+    const investmentDetails = [];
+    investments.forEach(inv => {
+      const currentValue = inv.current_amount_cents / 100;
+      const investedAmount = inv.initial_amount_cents / 100;
+      summary.totalValue += currentValue;
+      summary.totalInvested += investedAmount;
+
+      investmentDetails.push({
+        id: inv.id,
+        name: inv.name,
+        type: inv.type,
+        status: inv.status,
+        riskLevel: inv.risk_level,
+        amountInvested: investedAmount,
+        currentValue: currentValue,
+      });
+    });
+
+    // Calcular métricas
+    const diversificationScore = Math.min((Object.keys(
+      investmentDetails.reduce((acc, inv) => ({ ...acc, [inv.type]: true }), {})
+    ).length * 1.5) + (investments.length * 0.1), 10);
+
+    const metrics = {
+      diversificationScore: parseFloat(diversificationScore.toFixed(1)),
+    };
+
+    // Usar el nuevo servicio profesional de IA Financiera
+    const technicalAnalysis = FinancialAIService.analyzeTextIndicators(investmentDetails);
+    const fundamentalMetrics = FinancialAIService.analyzeFundamentalMetrics(investmentDetails, summary);
+    const riskAssessment = FinancialAIService.assessRisks(investmentDetails, summary);
+    const educationalRecommendations = FinancialAIService.generateEducationalRecommendations(
+      investmentDetails, 
+      summary, 
+      { ...metrics, ...fundamentalMetrics }
+    );
+    const executiveSummary = FinancialAIService.generateExecutiveSummary(
+      investmentDetails, 
+      summary, 
+      { ...metrics, ...fundamentalMetrics, ...riskAssessment }
+    );
+
+    // Mantener compatibilidad con antiguo servicio para datos adicionales
+    const recommendations = AIRecommendationsService.analyzePortfolio(investmentDetails, metrics);
+    const insights = AIRecommendationsService.generateInsights(investmentDetails, summary, metrics);
+    const healthScore = AIRecommendationsService.calculateHealthScore(investmentDetails, metrics, summary);
+    const actionItems = AIRecommendationsService.generateActionItems(investmentDetails, metrics, summary);
+
+    res.json({
+      // Nuevo análisis profesional
+      disclaimer: FinancialAIService.LEGAL_DISCLAIMER,
+      executiveSummary,
+      technicalAnalysis,
+      fundamentalMetrics,
+      riskAssessment,
+      educationalRecommendations,
+      
+      // Datos legacy por compatibilidad
+      recommendations,
+      insights,
+      healthScore,
+      actionItems,
+      summary: {
+        portfolioValue: summary.totalValue,
+        investmentCount: summary.investmentCount,
+      },
+    });
+
+  } catch (error) {
+    console.error('❌ [getAIRecommendations] Error:', error);
+    res.status(500).json({ error: 'Error al obtener recomendaciones', details: error.message });
+  }
+};

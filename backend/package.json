@@ -6,6 +6,9 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
+    "migrate": "node src/scripts/run-migrations.js",
+    "init-db": "node src/scripts/initialize-database.js",
+    "seed": "node src/scripts/run-migrations.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -21,7 +24,11 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
-    "mysql2": "^3.16.0"
+    "mysql2": "^3.16.0",
+    "openai": "^6.15.0",
+    "socket.io": "^4.8.3",
+    "socket.io-client": "^4.8.3",
+    "sql-bricks": "^3.0.1"
   },
   "devDependencies": {
     "nodemon": "^3.1.11"

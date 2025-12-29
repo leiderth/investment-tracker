@@ -1,7 +1,7 @@
 // frontend/src/components/risk/RiskAnalysisCard.jsx
 
 import { useEffect, useState } from 'react';
-import { Shield, TrendingUp, PieChart, AlertTriangle } from 'lucide-react';
+import { Shield, TrendingUp, TrendingDown, Activity, AlertCircle, RefreshCw } from 'lucide-react';
 import { getPortfolioRiskAnalysis } from '../../services/api';
 import { formatCurrency } from '../../utils/format';
 import RiskBadge from '../common/RiskBadge';
@@ -9,6 +9,7 @@ import RiskBadge from '../common/RiskBadge';
 export default function RiskAnalysisCard() {
   const [analysis, setAnalysis] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     loadRiskAnalysis();
@@ -17,10 +18,12 @@ export default function RiskAnalysisCard() {
   const loadRiskAnalysis = async () => {
     try {
       setLoading(true);
+      setError(null);
       const response = await getPortfolioRiskAnalysis();
       setAnalysis(response.data);
-    } catch (error) {
-      console.error('Error al cargar análisis de riesgo:', error);
+    } catch (err) {
+      console.error('Error al cargar análisis de riesgo:', err);
+      setError('Error al cargar el análisis de riesgo');
     } finally {
       setLoading(false);
     }

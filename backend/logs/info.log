@@ -34,3 +34,272 @@
 {"timestamp":"2025-12-28T20:54:19.050Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
 {"timestamp":"2025-12-28T20:54:39.489Z","level":"INFO","message":"Progreso agregado a meta","data":{"user_id":2,"goal_id":"1","amount":100000},"env":"development"}
 {"timestamp":"2025-12-28T20:54:39.498Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-28T21:00:10.130Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-28T21:00:10.136Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-28T21:02:12.162Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-28T21:02:12.169Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-28T21:02:15.379Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-28T21:02:15.388Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-28T21:02:20.943Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-28T21:02:20.948Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-28T21:06:16.179Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T21:20:08.251Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T21:27:56.918Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-28T21:27:56.923Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-28T21:27:59.559Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-28T21:27:59.564Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-28T21:28:01.098Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-28T21:28:01.103Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-28T21:33:52.588Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T21:35:26.758Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T21:38:20.760Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T21:39:33.324Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-28T21:39:33.331Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-28T21:39:49.426Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-28T21:39:49.433Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-28T21:46:58.082Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-28T21:46:58.087Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-28T21:52:17.251Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-28T21:52:17.256Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-28T21:55:43.130Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:09:33.567Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-28T22:09:33.574Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-28T22:12:41.987Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-28T22:12:41.994Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-28T22:13:23.687Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-28T22:13:23.693Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-28T22:13:48.650Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:14:08.252Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:14:21.494Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:14:35.792Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:14:50.437Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:14:57.391Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:15:13.707Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:15:31.065Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:15:47.961Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:15:52.534Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-28T22:15:52.541Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-28T22:16:26.138Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:16:43.081Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:17:05.168Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:17:18.979Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:19:32.564Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:19:49.730Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:19:52.953Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:20:00.892Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:21:07.492Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:21:11.008Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:21:12.894Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:21:14.556Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:21:20.868Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:21:23.044Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:21:25.107Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:21:29.582Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:21:32.686Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:27:54.211Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-28T22:27:54.218Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-28T22:30:22.503Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:30:25.417Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:30:27.741Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:30:34.075Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:30:51.281Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:30:58.378Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:31:00.221Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:34:56.787Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-28T22:34:56.792Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-28T22:35:52.927Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:35:58.924Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:36:02.177Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:36:09.053Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:36:26.349Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:36:48.059Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:36:54.783Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:37:05.558Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:37:08.791Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:37:21.744Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:37:28.075Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:37:47.625Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:38:34.765Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:38:41.724Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:38:50.105Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:38:51.797Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:38:53.400Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:39:01.352Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:39:04.301Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:39:09.355Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:39:12.676Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:39:32.623Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:39:38.855Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:41:56.245Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:42:09.649Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:42:33.242Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:44:37.521Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:44:59.726Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:45:04.124Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:45:09.224Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:46:47.608Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:47:02.202Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:47:08.211Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:47:09.409Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:47:14.441Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:48:08.650Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T22:54:26.502Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T23:10:25.625Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T23:10:39.425Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T23:10:47.300Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T23:10:58.941Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T23:11:11.645Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T23:18:54.856Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T23:19:07.908Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T23:19:49.846Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T23:23:09.295Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T23:25:00.930Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T23:27:02.928Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T23:30:58.552Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T23:31:33.800Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T23:33:39.076Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T23:35:26.761Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T23:40:27.679Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-28T23:40:27.685Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-28T23:48:51.820Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T23:50:33.811Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T23:52:22.925Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-28T23:53:43.733Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T00:00:28.787Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-29T00:00:28.793Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-29T00:02:30.301Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-29T00:02:30.309Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-29T00:06:44.213Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T00:06:55.711Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-29T00:06:55.718Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-29T00:13:52.306Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T00:13:53.248Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T00:13:55.610Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T00:13:58.274Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T00:14:02.058Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T00:14:18.870Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T00:18:07.481Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T00:20:19.980Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T00:22:08.575Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T00:26:16.994Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T00:30:14.255Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T00:30:19.441Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T00:30:24.320Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T00:32:33.604Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T00:34:18.475Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T00:43:47.462Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T00:44:55.651Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T00:47:01.487Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T00:47:05.446Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T00:47:39.382Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T00:50:19.628Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T00:59:33.863Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T01:18:53.044Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T01:19:25.584Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T01:21:32.723Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T01:21:35.508Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T01:21:41.053Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T01:21:42.506Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T01:21:56.448Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T01:23:38.729Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T01:24:13.649Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-29T01:24:13.654Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-29T01:25:17.451Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T01:25:26.010Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T01:25:36.081Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T01:25:37.784Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T01:25:47.003Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T01:34:29.242Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T01:36:55.092Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-29T01:36:55.098Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-29T01:38:32.742Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-29T01:38:32.748Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-29T01:39:09.522Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T01:42:00.426Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T01:43:20.797Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T01:49:10.898Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-29T01:49:10.903Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-29T01:51:07.183Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-29T01:51:07.189Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-29T01:55:43.775Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-29T01:55:43.780Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-29T02:04:06.405Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T02:04:12.162Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T02:04:37.937Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T02:06:18.788Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-29T02:06:18.796Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-29T02:06:43.347Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T02:06:52.398Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T02:07:12.530Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T02:07:13.776Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T02:07:28.560Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T02:07:35.810Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T02:08:08.582Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T02:08:23.841Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T02:08:26.469Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T02:08:28.114Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T02:13:26.356Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T02:13:29.115Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T02:15:31.127Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-29T02:15:31.133Z","level":"INFO","message":"Metas obtenidas","data":{"user_id":2,"count":1},"env":"development"}
+{"timestamp":"2025-12-29T02:17:59.341Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T02:18:02.504Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T02:18:09.683Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T02:18:49.822Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T02:26:40.970Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T02:42:40.894Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T02:42:42.834Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T02:42:58.909Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T02:44:13.830Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T02:45:05.165Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T02:51:48.570Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T02:57:55.733Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T02:58:44.731Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T02:58:52.309Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T03:00:16.775Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T03:00:29.864Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T03:01:49.423Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T03:01:56.621Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T03:02:18.314Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T03:02:20.911Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T03:02:23.867Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T03:02:26.949Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T03:05:13.081Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T03:20:47.940Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T03:20:49.820Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T03:21:09.853Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T03:21:11.458Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T03:21:12.023Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T03:21:13.775Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T03:21:14.259Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T03:21:20.286Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T03:21:23.556Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T03:21:24.346Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T03:24:19.722Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T03:27:31.386Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T03:31:05.448Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T03:31:31.983Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T03:39:35.608Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T03:52:06.216Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T03:52:09.292Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T03:52:15.603Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T03:53:03.771Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T03:53:17.348Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T03:53:19.123Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T03:53:20.881Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T03:53:22.393Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T03:59:35.055Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T03:59:38.895Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T03:59:43.215Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T03:59:54.085Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T04:00:01.980Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T04:00:14.142Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T04:00:15.462Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T04:00:24.256Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T04:02:29.131Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T04:02:36.998Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T04:13:02.459Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T04:16:35.267Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T04:16:38.362Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T04:17:29.597Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}
+{"timestamp":"2025-12-29T04:17:32.647Z","level":"INFO","message":"🚀 Servidor corriendo en http://localhost:5000","data":{"database":"investment-tracker","environment":"development"},"env":"development"}

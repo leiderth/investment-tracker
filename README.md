@@ -1,159 +1,197 @@
-# InvestTracker 📊
+# Investment Tracker
 
-Una aplicación web completa para gestionar y monitorear tu portafolio de inversiones.
+Sistema completo de gestión de inversiones con análisis en tiempo real, múltiples monedas y métricas avanzadas.
 
-## 🚀 Características
+## 🚀 Inicio Rápido
 
-- ✅ Registro e inicio de sesión con JWT
-- ✅ Dashboard con estadísticas en tiempo real
-- ✅ Gestión de inversiones (crear, editar, eliminar)
-- ✅ Visualización de evolución del patrimonio
-- ✅ Distribución por tipo de inversión
-- ✅ Cálculo automático de rendimientos
-- ✅ Interfaz responsive y moderna
+### Requisitos
+- Node.js 18+
+- MySQL 8.0+
+- npm o yarn
 
-## 🛠️ Tech Stack
+### Instalación
 
-### Backend
-- Node.js + Express
-- MySQL 8
-- JWT para autenticación
-- bcryptjs para encriptación de contraseñas
-- CORS habilitado
+```bash
+# Clonar repositorio
+git clone <repo>
+cd investment-tracker
 
-### Frontend
-- React 19.2 + Vite
-- React Router 7.11
-- Axios para API calls
-- Tailwind CSS v3.4.0
-- Recharts para gráficos
-- Lucide React para iconos
+# Instalar dependencias del backend
+cd backend
+npm install
+
+# Instalar dependencias del frontend
+cd ../frontend
+npm install
+cd ..
+```
+
+### Configuración
+
+1. **Backend**: Crear `.env` en `backend/`
+```
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=
+DB_NAME=investment_tracker
+PORT=5000
+NODE_ENV=development
+```
+
+2. **Frontend**: Ya está configurado en `frontend/src/config/api.js`
+
+### Ejecutar
+
+```bash
+# Terminal 1 - Backend (puerto 5000)
+cd backend
+npm run dev
+
+# Terminal 2 - Frontend (puerto 5173)
+cd frontend
+npm run dev
+```
+
+Abre http://localhost:5173 en tu navegador.
 
 ## 📁 Estructura del Proyecto
 
 ```
 investment-tracker/
-├── backend/
+├── backend/                 # API REST (Node.js + Express)
 │   ├── src/
-│   │   ├── server.js
-│   │   ├── config/
-│   │   ├── controllers/
-│   │   ├── middleware/
-│   │   ├── routes/
-│   │   └── utils/
-│   ├── package.json
-│   └── .env
-├── frontend/
+│   │   ├── server.js       # Punto de entrada
+│   │   ├── config/         # Configuración (BD, env)
+│   │   ├── routes/         # Rutas API
+│   │   ├── controllers/    # Controladores
+│   │   ├── models/         # Modelos de BD
+│   │   ├── middleware/     # Middleware
+│   │   ├── utils/          # Utilidades
+│   │   └── scripts/        # Scripts auxiliares
+│   ├── database/
+│   │   ├── migrations/     # Migraciones SQL
+│   │   └── seeds/          # Datos iniciales
+│   └── package.json
+│
+├── frontend/                # React App (Vite)
 │   ├── src/
-│   │   ├── pages/
-│   │   ├── components/
-│   │   ├── services/
-│   │   └── utils/
-│   ├── package.json
-│   └── vite.config.js
-├── database/
-│   ├── schema.sql
-│   └── seeds.sql
-└── README.md
+│   │   ├── main.jsx        # Punto de entrada
+│   │   ├── App.jsx         # App principal
+│   │   ├── pages/          # Páginas (Dashboard, etc)
+│   │   ├── components/     # Componentes reutilizables
+│   │   ├── services/       # Servicios API
+│   │   ├── hooks/          # Custom hooks
+│   │   ├── context/        # Context API
+│   │   ├── utils/          # Utilidades
+│   │   ├── config/         # Configuración
+│   │   └── assets/         # Imágenes, iconos
+│   ├── public/             # Archivos estáticos
+│   └── package.json
+│
+├── database/               # Documentación de BD
+│   ├── schema.sql          # Esquema base
+│   └── seeds.sql           # Seeds iniciales
+│
+├── docs/                   # Documentación
+│   ├── setup/              # Guías de instalación
+│   ├── api/                # Documentación API
+│   ├── features/           # Documentación de features
+│   └── README.md           # Índice de docs
+│
+├── .env.example            # Variables de ambiente ejemplo
+├── .gitignore              # Git ignore
+└── README.md               # Este archivo
 ```
 
-## 🔧 Instalación
+## 🔧 Características Principales
 
-### Requisitos previos
-- Node.js v18+
+- **Dashboard Completo**: Vista general del portafolio
+- **Gestión de Inversiones**: CRUD completo
+- **Análisis Avanzado**: Volatilidad, Sharpe, Max Drawdown
+- **Multi-moneda**: Conversiones en tiempo real
+- **Histórico**: Seguimiento diario del patrimonio
+- **Metas Financieras**: Planificación de objetivos
+- **Autenticación**: Sistema de usuarios seguro
+
+## 📊 Stack Tecnológico
+
+**Backend:**
+- Node.js + Express
 - MySQL 8
-- npm o yarn
+- JWT (autenticación)
+- Validación con Joi
 
-### Backend
+**Frontend:**
+- React 19 + Vite
+- TailwindCSS (estilos)
+- Recharts (gráficos)
+- Axios (HTTP client)
 
-```bash
-cd backend
-npm install
-cp .env.example .env
-# Configura las variables de entorno en .env
-npm run dev
-```
+## 📝 API Endpoints Principales
 
-### Frontend
-
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-## 📝 Variables de Entorno
-
-### Backend (.env)
-```
-PORT=5000
-DB_HOST=localhost
-DB_USER=root
-DB_PASSWORD=
-DB_NAME=investment-tracker
-JWT_SECRET=tu_secreto_aqui
-JWT_EXPIRES_IN=7d
-NODE_ENV=development
-```
-
-### Frontend (.env)
-```
-VITE_API_URL=http://localhost:5000/api
-```
-
-## 🗄️ Base de Datos
-
-Para crear la base de datos:
-
-```bash
-mysql -u root -p < database/schema.sql
-mysql -u root -p investment-tracker < database/seeds.sql
-```
-
-## 🚀 Uso
-
-1. **Registrarse**: Crea una nueva cuenta en la página de registro
-2. **Iniciar sesión**: Accede con tus credenciales
-3. **Dashboard**: Visualiza tus estadísticas principales
-4. **Crear inversión**: Haz clic en "Nueva Inversión" para agregar una nueva
-5. **Gestionar**: Edita o elimina inversiones según sea necesario
-
-## 📊 Endpoints de API
-
-### Autenticación
-- `POST /api/auth/register` - Registrar usuario
-- `POST /api/auth/login` - Iniciar sesión
-- `GET /api/auth/profile` - Obtener perfil del usuario
+### Dashboard
+- `GET /api/dashboard/complete` - Datos completos del dashboard
 
 ### Inversiones
-- `GET /api/investments` - Obtener todas las inversiones
-- `POST /api/investments` - Crear nueva inversión
-- `GET /api/investments/:id` - Obtener inversión específica
+- `GET /api/investments` - Listar inversiones
+- `POST /api/investments` - Crear inversión
 - `PUT /api/investments/:id` - Actualizar inversión
 - `DELETE /api/investments/:id` - Eliminar inversión
 
-### Dashboard
-- `GET /api/dashboard/stats` - Obtener estadísticas
-- `GET /api/dashboard/evolution` - Obtener evolución patrimonial
+### Análisis
+- `GET /api/analytics/risk` - Análisis de riesgo
+- `GET /api/analytics/performance` - Rendimiento
+- `GET /api/analytics/currencies` - Análisis multi-moneda
 
-## 🤝 Contribuir
+Para documentación completa, ver [docs/api/](docs/api/)
 
-Las contribuciones son bienvenidas. Por favor:
+## 🗄️ Base de Datos
 
-1. Fork el repositorio
-2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
-3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
-4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abre un Pull Request
+Tablas principales:
+- `users` - Usuarios del sistema
+- `investments` - Inversiones registradas
+- `investment_snapshots` - Histórico diario
+- `exchange_rates` - Tasas de cambio
+- `portfolio_daily_metrics` - Métricas diarias
+- `financial_goals` - Metas financieras
 
-## 📄 Licencia
+Para esquema completo, ver [database/schema.sql](database/schema.sql)
 
-Este proyecto está licenciado bajo la Licencia MIT.
+## 🔐 Autenticación
 
-## 📧 Contacto
+El sistema usa JWT. Los tokens se incluyen en el header:
+```
+Authorization: Bearer <token>
+```
 
-Para preguntas o sugerencias, contacta al desarrollador.
+## 📚 Documentación
+
+- [Setup Completo](docs/setup/) - Instalación detallada
+- [Documentación API](docs/api/) - Endpoints y ejemplos
+- [Features](docs/features/) - Características del sistema
+
+## 🐛 Troubleshooting
+
+**Error: "Cannot find module"**
+```bash
+cd backend && npm install
+cd ../frontend && npm install
+```
+
+**Error: "Connection refused" (BD)**
+- Verificar que MySQL está ejecutándose
+- Verificar credenciales en .env
+
+**Error: "Port already in use"**
+- Backend usa puerto 5000
+- Frontend usa puerto 5173
+- Cambiar en `.env` o `vite.config.js` si es necesario
+
+## 📞 Soporte
+
+Para reportar bugs o sugerencias, crear un issue en GitHub.
 
 ---
 
-**Desarrollado con ❤️ para gestionar inteligentemente tu portafolio de inversiones**
+**Estado**: Production Ready ✅
+**Última actualización**: Diciembre 2025

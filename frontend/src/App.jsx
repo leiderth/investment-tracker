@@ -1,14 +1,24 @@
 // frontend/src/App.jsx
 
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext'; // ← SOLO AuthProvider
-import { useAuth } from './hooks/useAuth'; // ← useAuth desde hooks
+import { AuthProvider } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
+import { useAuth } from './hooks/useAuth';
 import Login from './pages/Login';
 import Register from './pages/Registrer';
 import Dashboard from './pages/Dashboard';
 import Investments from './pages/Investments';
 import Simulations from './pages/Simulations';
 import Goals from './pages/Goals';
+import AdvancedKPIs from './pages/AdvancedKPIs';
+import Currency from './pages/Currency';
+import ExchangeRateTrends from './pages/ExchangeRateTrends';
+import CurrencyAlerts from './pages/CurrencyAlerts';
+import PortfolioAnalysis from './pages/PortfolioAnalysis';
+import ChatFinBot from './pages/ChatFinBot';
+import MarketData from './pages/MarketData';
+import Profile from './pages/Profile';
+import Settings from './pages/Settings';
 import Layout from './components/layout/Layout';
 
 // Componente para proteger rutas
@@ -50,7 +60,8 @@ function PublicRoute({ children }) {
 function App() {
   return (
     <BrowserRouter>
-      <AuthProvider>
+      <ThemeProvider>
+        <AuthProvider>
         <Routes>
           {/* Rutas públicas */}
           <Route
@@ -111,6 +122,96 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/kpis"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <AdvancedKPIs />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/currency"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <Currency />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/trends"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <ExchangeRateTrends />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/alerts"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <CurrencyAlerts />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/portfolio-analysis"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <PortfolioAnalysis />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/chat"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <ChatFinBot />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/market"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <MarketData />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <Profile />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/settings"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <Settings />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
 
           {/* Ruta raíz */}
           <Route path="/" element={<Navigate to="/dashboard" />} />
@@ -119,6 +220,7 @@ function App() {
           <Route path="*" element={<Navigate to="/dashboard" />} />
         </Routes>
       </AuthProvider>
+      </ThemeProvider>
     </BrowserRouter>
   );
 }

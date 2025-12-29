@@ -1,5 +1,7 @@
 const pool = require('../config/database');
 const { fromCents } = require('../utils/currency');
+const PatrimonialEvolutionManager = require('../utils/patrimonialEvolutionManager');
+const logger = require('../utils/logger');
 
 /**
  * @route   GET /api/dashboard/stats
@@ -106,30 +108,16 @@ exports.getStats = async (req, res) => {
 exports.getEvolution = async (req, res) => {
   try {
     const userId = req.user.id;
+    const { days = 30 } = req.query;
 
-    const [snapshots] = await pool.execute(
-      `SELECT 
-        s.snapshot_date as date,
-        SUM(s.value_cents) as total_value_cents
-       FROM investment_snapshots s
-       INNER JOIN investments i ON s.investment_id = i.id
-       WHERE i.user_id = ? 
-         AND s.snapshot_date >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
-       GROUP BY s.snapshot_date
-       ORDER BY s.snapshot_date ASC`,
-      [userId]
-    );
+    // Usar el manager de evolución
+    const evolution = await PatrimonialEvolutionManager.getEvolution(userId, parseInt(days));
 
-    const evolution = snapshots.map(snap => ({
-      date: snap.date,
-      value: fromCents(snap.total_value_cents)
-    }));
-
-    // Retornar directamente el array, no { evolution }
+    // Retornar como array
     res.json(evolution);
 
   } catch (error) {
-    console.error('Error obteniendo evolución:', error);
+    logger.error('Error obteniendo evolución:', error);
     res.status(500).json({ error: 'Error al obtener evolución patrimonial' });
   }
 };
@@ -271,6 +259,167 @@ exports.getRiskAnalysis = async (req, res) => {
   } catch (error) {
     console.error('Error en análisis de riesgo:', error);
     res.status(500).json({ error: 'Error al analizar el riesgo' });
+  }
+};
+
+/**
+ * @route   GET /api/dashboard/advanced-metrics
+ * @desc    Obtener métricas avanzadas de KPIs
+ * @access  Private
+ */
+exports.getAdvancedMetrics = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const {
+      calculateDiversificationIndex,
+      calculateHistoricalVolatility,
+      calculateCorrelationMatrix,
+      calculatePortfolioVariance,
+      calculatePortfolioSharpe,
+      calculateValueAtRisk,
+      analyzeConcentrationBySector,
+      assessPortfolioRisk
+    } = require('../utils/advancedMetrics');
+
+    // 1. Obtener inversiones activas
+    const [investments] = await pool.execute(
+      `SELECT 
+        id,
+        name,
+        type,
+        sector,
+        initial_amount_cents,
+        current_amount_cents,
+        annual_return_percentage,
+        status
+       FROM investments
+       WHERE user_id = ? AND status = 'active'
+       ORDER BY current_amount_cents DESC`,
+      [userId]
+    );
+
+    if (investments.length === 0) {
+      return res.json({
+        success: true,
+        data: {
+          diversificationIndex: 0,
+          volatility: {
+            historical: 0,
+            period: 'monthly',
+            dataPoints: 0
+          },
+          correlationMatrix: [],
+          portfolioVariance: 0,
+          sharpeRatio: 0,
+          valueAtRisk: {
+            loss95: 0,
+            loss99: 0,
+            percentageOf95: 0,
+            percentageOf99: 0
+          },
+          sectorConcentration: {},
+          riskMetrics: {
+            portfolioRiskLevel: 'bajo',
+            concentration: 'desconocida',
+            volatilityTrend: 'sin datos'
+          },
+          message: 'Sin inversiones activas'
+        }
+      });
+    }
+
+    // 2. Convertir a formato de cálculo
+    const investmentData = investments.map(inv => ({
+      id: inv.id,
+      name: inv.name,
+      type: inv.type,
+      sector: inv.sector || 'Sin Categoría',
+      value: inv.current_amount_cents / 100,
+      initialValue: inv.initial_amount_cents / 100,
+      annualReturn: inv.annual_return_percentage || 10,
+      historicalReturns: Array(12).fill(inv.annual_return_percentage / 12 || 0.83) // Simulado por ahora
+    }));
+
+    // 3. Calcular total del portafolio
+    const totalValue = investmentData.reduce((sum, inv) => sum + inv.value, 0);
+    const totalInitialValue = investmentData.reduce((sum, inv) => sum + inv.initialValue, 0);
+    const totalReturn = totalValue - totalInitialValue;
+    const totalReturnPercentage = (totalReturn / totalInitialValue) * 100;
+
+    // 4. Calcular índice de diversificación (HHI)
+    const diversificationIndex = calculateDiversificationIndex(investmentData);
+
+    // 5. Calcular volatilidad histórica
+    const historicalReturns = investmentData.map(inv => inv.annualReturn);
+    const volatility = calculateHistoricalVolatility(historicalReturns, 'monthly');
+
+    // 6. Matriz de correlación
+    const correlationMatrix = calculateCorrelationMatrix(investmentData);
+
+    // 7. Varianza del portafolio
+    const weights = investmentData.map(inv => inv.value / totalValue);
+    const volatilities = investmentData.map(inv => (inv.annualReturn / 100) * 0.25); // Estimar volatilidad
+    const portfolioVariance = calculatePortfolioVariance(weights, volatilities, correlationMatrix);
+
+    // 8. Sharpe Ratio
+    const sharpeRatio = calculatePortfolioSharpe(totalReturnPercentage, volatility);
+
+    // 9. Value at Risk
+    const valueAtRisk = calculateValueAtRisk(totalValue, volatility / 100);
+
+    // 10. Concentración por sector
+    const sectorConcentration = analyzeConcentrationBySector(investmentData);
+
+    // 11. Evaluación de riesgo
+    const riskMetrics = assessPortfolioRisk({
+      totalValue,
+      investments: investmentData,
+      volatility,
+      diversificationIndex
+    });
+
+    // 12. Sugerencias de rebalanceo (si aplicable)
+    const targetWeights = Array(investmentData.length).fill(1 / investmentData.length);
+    
+    res.json({
+      success: true,
+      data: {
+        diversificationIndex: parseFloat(diversificationIndex.toFixed(2)),
+        volatility: {
+          historical: parseFloat(volatility.toFixed(4)),
+          period: 'monthly',
+          dataPoints: investmentData.length,
+          interpretation: volatility > 15 ? 'Alta' : volatility > 8 ? 'Media' : 'Baja'
+        },
+        correlationMatrix,
+        portfolioVariance: parseFloat(portfolioVariance.toFixed(6)),
+        sharpeRatio: parseFloat(sharpeRatio.toFixed(4)),
+        valueAtRisk: {
+          loss95: Math.round(valueAtRisk.loss95),
+          loss99: Math.round(valueAtRisk.loss99),
+          percentageOf95: valueAtRisk.percentageOf95,
+          percentageOf99: valueAtRisk.percentageOf99,
+          interpretation: `Con 95% confianza, máxima pérdida: ${valueAtRisk.percentageOf95.toFixed(2)}%`
+        },
+        sectorConcentration,
+        portfolioSummary: {
+          totalValue: parseFloat(totalValue.toFixed(2)),
+          totalInvested: parseFloat(totalInitialValue.toFixed(2)),
+          totalProfit: parseFloat(totalReturn.toFixed(2)),
+          totalReturnPercentage: parseFloat(totalReturnPercentage.toFixed(2)),
+          numberOfInvestments: investmentData.length
+        },
+        riskMetrics
+      }
+    });
+
+  } catch (error) {
+    console.error('Error al obtener métricas avanzadas:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Error al calcular métricas avanzadas',
+      details: error.message
+    });
   }
 };
 // ✅ Asegúrate de tener estos exports

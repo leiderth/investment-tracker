@@ -59,18 +59,6 @@ export const updateInvestment = (id, data) => api.put(`/investments/${id}`, data
 export const deleteInvestment = (id) => api.delete(`/investments/${id}`);
 
 // ==========================================
-// DASHBOARD ENDPOINTS
-// ==========================================
-export const dashboardAPI = {
-  getStats: () => api.get('/dashboard/stats'),
-  getEvolution: () => api.get('/dashboard/evolution')
-};
-
-// Exportaciones individuales
-export const getDashboardStats = () => api.get('/dashboard/stats');
-export const getPatrimonyEvolution = () => api.get('/dashboard/evolution');
-
-// ==========================================
 // TRANSACTIONS ENDPOINTS
 // ==========================================
 export const transactionsAPI = {
@@ -88,6 +76,10 @@ export const getTransactions = (investmentId) =>
 
 export const deleteTransaction = (transactionId) => 
   api.delete(`/transactions/${transactionId}`);
+
+// ==========================================
+// RISK ENDPOINTS
+// ==========================================
 export const riskAPI = {
   getPortfolioAnalysis: () => api.get('/risk/portfolio-analysis'),
   getDistribution: () => api.get('/risk/distribution')
@@ -95,6 +87,23 @@ export const riskAPI = {
 
 export const getPortfolioRiskAnalysis = () => api.get('/risk/portfolio-analysis');
 export const getRiskDistribution = () => api.get('/risk/distribution');
+
+// ==========================================
+// DASHBOARD ENDPOINTS - COMPREHENSIVE
+// ==========================================
+export const dashboardAPI = {
+  getStats: () => api.get('/dashboard/stats'),
+  getEvolution: (days) => api.get('/dashboard/evolution', { params: { days } }),
+  getRiskAnalysis: () => api.get('/dashboard/risk-analysis'),
+  getAdvancedMetrics: () => api.get('/dashboard/advanced-metrics')
+};
+
+// Exportaciones individuales de Dashboard
+export const getDashboardStats = () => api.get('/dashboard/stats');
+export const getDashboardEvolution = (days) => api.get('/dashboard/evolution', { params: { days } });
+export const getDashboardRiskAnalysis = () => api.get('/dashboard/risk-analysis');
+export const getAdvancedMetrics = () => api.get('/analytics/metrics');
+export const getPatrimonyEvolution = (days) => api.get('/dashboard/evolution', { params: { days } });
 
 // ==========================================
 // SIMULATIONS ENDPOINTS
@@ -139,6 +148,33 @@ export const deleteGoal = (id) => api.delete(`/goals/${id}`);
 export const getGoalProgress = (id) => api.get(`/goals/${id}/progress`);
 export const addGoalProgress = (id, data) => api.post(`/goals/${id}/add-progress`, data);
 export const analyzeGoalFeasibility = (id, data) => api.post(`/goals/${id}/analyze-feasibility`, data);
+
+// ==========================================
+// CURRENCY / MULTIMONEDA ENDPOINTS
+// ==========================================
+export const currencyAPI = {
+  getAllRates: () => api.get('/currency/rates'),
+  getRate: (from, to) => api.get(`/currency/rate/${from}/${to}`),
+  convert: (data) => api.post('/currency/convert', data),
+  getHistory: (from, to, days = 30) => api.get(`/currency/history/${from}/${to}`, { params: { days } }),
+  getSupportedCurrencies: () => api.get('/currency/supported'),
+  getUserPreferences: () => api.get('/currency/user-preferences'),
+  updateUserPreferences: (data) => api.put('/currency/user-preferences', data),
+  getPortfolioInCurrencies: (baseCurrency = 'USD') => api.get('/currency/portfolio', { params: { baseCurrency } }),
+  convertPortfolioTo: (data) => api.post('/currency/portfolio/convert', data),
+  updateRate: (from, to, rate) => api.put(`/currency/rate/${from}/${to}`, { rate })
+};
+
+// Exportaciones individuales de Currency
+export const getAllExchangeRates = () => api.get('/currency/rates');
+export const getExchangeRate = (from, to) => api.get(`/currency/rate/${from}/${to}`);
+export const convertCurrency = (amount, from, to) => api.post('/currency/convert', { amount, from, to });
+export const getExchangeHistory = (from, to, days = 30) => api.get(`/currency/history/${from}/${to}`, { params: { days } });
+export const getCurrencies = () => api.get('/currency/supported');
+export const getCurrencyPreferences = () => api.get('/currency/user-preferences');
+export const saveCurrencyPreferences = (data) => api.put('/currency/user-preferences', data);
+export const getPortfolioMultiCurrency = (baseCurrency = 'USD') => api.get('/currency/portfolio', { params: { baseCurrency } });
+export const convertPortfolio = (data) => api.post('/currency/portfolio/convert', data);
 
 // ==========================================
 // EXPORT DEFAULT
